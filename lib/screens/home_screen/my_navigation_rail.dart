@@ -87,7 +87,10 @@ class _MyNavigationRailState extends State<MyNavigationRail> {
             // This is the main content.
             Expanded(
               child: Center(
-                child: _childern[_selectedIndex],
+                child: IndexedStack(
+                 index: _selectedIndex,
+                  children: _childern,
+                ),
               ),
             )
           ],

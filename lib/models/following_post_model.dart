@@ -17,6 +17,7 @@ class PostModel {
   List<String> likes;
   PostedByModel postedBy;
   List<CommentModel> comments;
+  bool isLiked;
 
   PostModel(
       {this.id,
@@ -25,7 +26,8 @@ class PostModel {
       this.createdAt,
       this.likes,
       this.postedBy,
-      this.comments});
+      this.comments,
+      this.isLiked});
 
   factory PostModel.fromMap(Map<String, dynamic> json) {
     return PostModel(
@@ -35,6 +37,7 @@ class PostModel {
         postedBy: PostedByModel.fromMap(json['postedBy']),
         createdAt: json['createdAt'],
         likes: List<String>.from(json['likes']),
+        isLiked: json['isLiked'],
         comments: List<CommentModel>.from(
             json['comments'].map((i) => CommentModel.fromMap(i))));
   }

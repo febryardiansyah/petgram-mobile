@@ -13,8 +13,8 @@ class CommentForm extends StatelessWidget {
       child: Row(
         children: [
           Container(
-            width: 80.w,
-            height: 80.h,
+            width: 100.w,
+            height: 100.h,
             decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 color: BaseColor.grey3
@@ -27,17 +27,22 @@ class CommentForm extends StatelessWidget {
           SizedBox(width: 10,),
           Container(
             width: 700.w,
-            height: 100.h,
+            height: 140.h,
             child: TextFormField(
               maxLines: 10,
               decoration: InputDecoration(
+                 contentPadding: EdgeInsets.all(8),
                 hintText: 'enter comment..',
                 fillColor: BaseColor.grey1,
                 filled: true,
-//                focusedBorder: OutlineInputBorder(
-//                    borderSide: BorderSide(color: BaseColor.grey2,width: 1),
-//                    borderRadius: BorderRadius.all(Radius.circular(8))
-//                ),
+                focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: BaseColor.grey2,width: 1),
+                    borderRadius: BorderRadius.all(Radius.circular(8))
+                ),
+                border: OutlineInputBorder(
+                    borderSide: BorderSide(color: BaseColor.grey2,width: 1),
+                    borderRadius: BorderRadius.all(Radius.circular(8))
+                ),
               ),
             ),
           ),

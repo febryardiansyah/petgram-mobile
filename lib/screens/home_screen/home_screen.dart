@@ -24,14 +24,14 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<SignInBloc,SignInState>(
-      builder:(context,state)=> MyCustomView(
+      builder:(context,loginState)=> MyCustomView(
         title: 'Home',
         subTitle: Text('Petgram',style: TextStyle(fontFamily: BaseString.fBillabong,color: BaseColor.purple2,fontSize: 40),),
         body: BlocBuilder<FollowingPostBloc,FollowingPostState>(
           builder: (context,state){
             print(state);
             if(state is FollowingPostFailure){
-              Text(state.msg);
+              return Text(state.msg);
             }
             if (state is FollowingPostLoaded) {
               final data = state.data;
@@ -121,7 +121,7 @@ class PostItem extends StatelessWidget {
                   children: [
                     Row(
                       children: [
-                        Icon(Icons.favorite_border),
+                        _list.isLiked?Icon(Icons.favorite,color: BaseColor.red,):Icon(Icons.favorite_border),
                         Text('${_list.likes.length.toString()} likes'),
                         SizedBox(width: 10,),
                         Icon(Icons.chat_bubble_outline),

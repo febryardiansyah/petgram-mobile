@@ -6,12 +6,13 @@ abstract class POST{
   Future<FollowingPostModel> getFollowingPost();
 }
 
-class PostRepo implements POST{
+class PostRepo extends DioService implements POST{
 
   @override
   Future<FollowingPostModel> getFollowingPost()async {
+    print('nande');
     try{
-      Response response = await DioService.dio().get('post/followingpost');
+      Response response = await dio().get('post/followingpost');
       var res = FollowingPostModel.fromMap(response.data);
       return res;
     }on DioError catch(e){

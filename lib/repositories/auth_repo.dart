@@ -13,14 +13,14 @@ abstract class Auth {
   Future<List<String>> register({String name,String password,String email,String petname});
 }
 
-class AuthRepository implements Auth {
+class AuthRepository extends DioService implements Auth {
   @override
   Future<List<String>> signIn({String email, String password}) async {
 
     List<String> _list = [];
 
     try{
-      Response response = await DioService.dio()
+      Response response = await dio()
           .post('user/signin', data: FormData.fromMap({'email': email, 'password': password}));
       final message = response.data['message'].toString();
       final String token = response.data['token'].toString();
@@ -44,7 +44,7 @@ class AuthRepository implements Auth {
   Future<List<String>> register({String name, String password, String email, String petname}) async {
     List<String> _list = [];
     try{
-      Response response = await DioService.dio().post('user/register',data: FormData.fromMap({
+      Response response = await dio().post('user/register',data: FormData.fromMap({
         'email':email,'password':password,'name':name,'petname':petname,
       }));
       final message = response.data['message'].toString();
