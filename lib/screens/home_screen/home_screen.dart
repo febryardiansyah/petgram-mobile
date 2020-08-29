@@ -26,7 +26,13 @@ class _HomeScreenState extends State<HomeScreen> {
     return BlocBuilder<SignInBloc,SignInState>(
       builder:(context,loginState)=> MyCustomView(
         title: 'Home',
-        subTitle: Text('Petgram',style: TextStyle(fontFamily: BaseString.fBillabong,color: BaseColor.purple2,fontSize: 40),),
+//        subTitle: Text('Petgram',style: TextStyle(fontFamily: BaseString.fBillabong,color: BaseColor.purple2,fontSize: 40),),
+      subTitle: IconButton(
+        icon: Icon(Icons.arrow_back_ios),
+        onPressed: (){
+          context.bloc<SignInBloc>().add(SignOutBtnPressed());
+        },
+      ),
         body: BlocBuilder<FollowingPostBloc,FollowingPostState>(
           builder: (context,state){
             print(state);

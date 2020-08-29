@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:petgram_mobile_app/helpers/shared_preferences/profile_pref.dart';
-import 'package:petgram_mobile_app/services/DioService.dart';
+import 'package:petgram_mobile_app/services/base_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 abstract class Auth {
@@ -13,31 +13,44 @@ abstract class Auth {
   Future<List<String>> register({String name,String password,String email,String petname});
 }
 
-class AuthRepository extends DioService implements Auth {
+class AuthRepository extends BaseService implements Auth {
   @override
   Future<List<String>> signIn({String email, String password}) async {
 
     List<String> _list = [];
 
-    try{
-      Response response = await dio()
-          .post('user/signin', data: FormData.fromMap({'email': email, 'password': password}));
-      final message = response.data['message'].toString();
-      final String token = response.data['token'].toString();
-
-      _list.addAll([message,token]);
-      if(message != 'Email must be verified'){
+    Response response = await request(endpoint: 'user/signin', data: FormData.fromMap({'email': email, 'password': password}),requestType: RequestType.POST);
+    final message = response.data['message'].toString();
+    final String token = response.data['token'].toString();
+    print(response.statusCode);
+    if(message != 'Email must be verified'){
         ProfilePreference.setProfile(response.data['user']['profilePic']);
-      }
-      print(_list);
-      return _list;
-    }on DioError catch(e){
-      print(e);
-      final message = e.response.data['message'].toString();
-      _list.addAll([message,null]);
-      print(_list[0]);
-      return _list;
     }
+    if(response.statusCode != 200){
+      _list.addAll([message,null]);
+    }
+
+    _list.addAll([message,token]);
+    return _list;
+//    try{
+//      Response response = await dio()
+//          .post('user/signin', data: FormData.fromMap({'email': email, 'password': password}));
+//      final message = response.data['message'].toString();
+//      final String token = response.data['token'].toString();
+//
+//      _list.addAll([message,token]);
+//      if(message != 'Email must be verified'){
+//        ProfilePreference.setProfile(response.data['user']['profilePic']);
+//      }
+//      print(_list);
+//      return _list;
+//    }on DioError catch(e){
+//      print(e);
+//      final message = e.response.data['message'].toString();
+//      _list.addAll([message,null]);
+//      print(_list[0]);
+//      return _list;
+//    }
   }
   
   @override
