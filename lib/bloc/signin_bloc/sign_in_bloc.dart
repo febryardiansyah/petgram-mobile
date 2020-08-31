@@ -1,11 +1,14 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
+import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
 import 'package:petgram_mobile_app/bloc/auth_bloc/auth_bloc.dart';
+import 'package:petgram_mobile_app/helpers/shared_preferences/profile_pref.dart';
 import 'package:petgram_mobile_app/repositories/auth_repo.dart';
 
 part 'sign_in_event.dart';
+
 part 'sign_in_state.dart';
 
 class SignInBloc extends Bloc<SignInEvent, SignInState> {
@@ -29,19 +32,23 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
         yield SignInInitial();
       }
       try {
-        final response =
+        final Response response =
             await _auth.signIn(email: event.email, password: event.passwod);
-        if (response[0] == 'success') {
-          _authBloc.add(LoggedIn(token: response[1]));
-          yield SignInSuccess(msg: response[0]);
+        final String message = response.data['message'].toString();
+        final String token = response.data['token'].toString();
+
+        if (response.data['status'] == true) {
+          ProfilePreference.setProfile(response.data['user']['profilePic']);
+          _authBloc.add(LoggedIn(token: token));
+          yield SignInSuccess(msg: message);
         } else {
-          yield SignInFailure(msg: response[0]);
+          yield SignInFailure(msg: message);
         }
       } catch (e) {
         yield SignInFailure(msg: e.toString());
       }
     }
-    if(event is SignOutBtnPressed){
+    if (event is SignOutBtnPressed) {
       _authBloc.add(LoggedOut());
       yield SignInInitial();
     }

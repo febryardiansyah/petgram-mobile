@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:petgram_mobile_app/bloc/following_post_bloc/following_post_bloc.dart';
+import 'package:petgram_mobile_app/bloc/my_profile_bloc/profile_bloc.dart';
 import 'package:petgram_mobile_app/bloc/register_bloc/register_bloc.dart';
 import 'package:petgram_mobile_app/bloc/signin_bloc/sign_in_bloc.dart';
 import 'package:petgram_mobile_app/constants/base_string.dart';
@@ -34,6 +35,10 @@ class MyApp extends StatelessWidget {
         BlocProvider<FollowingPostBloc>(
           create: (_) => FollowingPostBloc(PostRepo()),
         ),
+        BlocProvider<ProfileBloc>(
+          create: (_) => ProfileBloc(PostRepo()),
+        ),
+
     ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

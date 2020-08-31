@@ -18,8 +18,15 @@ class BaseService {
         case RequestType.POST:
           _response = await _dio.post(endpoint,data: data);
           break;
+        case RequestType.PUT:
+          break;
+        case RequestType.DELETE:
+          break;
+        default:
+          break;
       }
     }on DioError catch(e){
+      print(e);
       _response = e.response;
     }
 

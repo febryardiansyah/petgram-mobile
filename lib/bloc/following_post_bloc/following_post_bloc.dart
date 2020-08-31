@@ -28,7 +28,7 @@ class FollowingPostBloc extends Bloc<FollowingPostEvent, FollowingPostState> {
             yield FollowingPostLoaded(data: response);
           }else{
             yield FollowingPostFailure(msg: response.message);
-          }
+        }
         }catch(e){
           yield FollowingPostFailure(msg: e.toString());
         }

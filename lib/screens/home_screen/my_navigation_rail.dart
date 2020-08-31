@@ -47,12 +47,14 @@ class _MyNavigationRailState extends State<MyNavigationRail> {
                   child: Icon(Icons.settings,color: BaseColor.white,),
                 ),
               ),
-              leading: GestureDetector(onTap: () {print('tap');}, child: Container(
+              leading: GestureDetector(onTap: () {
+                Navigator.pushNamed(context, '/myProfile');
+              }, child: Container(
                 margin: EdgeInsets.all(8),
                 width: 30,height: 50,decoration: BoxDecoration(
                 color: BaseColor.grey1,
                 shape: BoxShape.circle,
-//                image: DecorationImage(image: NetworkImage(_profilePic),fit: BoxFit.cover)
+                image: DecorationImage(image: NetworkImage(_profilePic),fit: BoxFit.cover)
               ),
               )),
               selectedIndex: _selectedIndex,

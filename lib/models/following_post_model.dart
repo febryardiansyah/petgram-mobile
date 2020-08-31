@@ -8,7 +8,7 @@ class FollowingPostModel {
     return FollowingPostModel(
         message: json['message'],
         postModel: List<PostModel>.from(
-            json['followingPostUser'].map((json) => PostModel.fromMap(json))));
+            json['followingPostUser'].map((item) => PostModel.fromMap(item))));
   }
 }
 
