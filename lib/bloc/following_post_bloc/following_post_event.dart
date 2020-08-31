@@ -6,3 +6,4 @@ abstract class FollowingPostEvent extends Equatable {
   List<Object> get props => [];
 }
 class FetchFollowingPost extends FollowingPostEvent{}
+class ResetFollowingPostEvent extends FollowingPostEvent{}

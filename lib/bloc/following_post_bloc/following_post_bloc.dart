@@ -34,5 +34,8 @@ class FollowingPostBloc extends Bloc<FollowingPostEvent, FollowingPostState> {
         }
       }
     }
+    if(event is ResetFollowingPostEvent){
+      yield FollowingPostInitial();
+    }
   }
 }

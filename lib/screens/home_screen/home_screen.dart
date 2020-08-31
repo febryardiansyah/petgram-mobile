@@ -19,20 +19,14 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    BlocProvider.of<FollowingPostBloc>(context)..add(FetchFollowingPost());
+   BlocProvider.of<FollowingPostBloc>(context)..add(FetchFollowingPost());
   }
+
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<SignInBloc,SignInState>(
-      builder:(context,loginState)=> MyCustomView(
+    return MyCustomView(
         title: 'Home',
-//        subTitle: Text('Petgram',style: TextStyle(fontFamily: BaseString.fBillabong,color: BaseColor.purple2,fontSize: 40),),
-      subTitle: IconButton(
-        icon: Icon(Icons.arrow_back_ios),
-        onPressed: (){
-          context.bloc<SignInBloc>().add(SignOutBtnPressed());
-        },
-      ),
+        subTitle: Text('Petgram',style: TextStyle(fontFamily: BaseString.fBillabong,color: BaseColor.purple2,fontSize: 40),),
         body: BlocBuilder<FollowingPostBloc,FollowingPostState>(
           builder: (context,state){
             print(state);
@@ -51,7 +45,6 @@ class _HomeScreenState extends State<HomeScreen> {
             return Container();
           },
         )
-      )
     );
   }
 }
