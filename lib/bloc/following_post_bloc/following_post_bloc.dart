@@ -24,7 +24,10 @@ class FollowingPostBloc extends Bloc<FollowingPostEvent, FollowingPostState> {
         try{
           yield FollowingPostLoading();
           final response = await _post.getFollowingPost();
-          if(response.message == 'success'){
+
+          if(response == null){
+            yield FollowingPostLoaded(data: null);
+          }else if(response.message == 'success'){
             yield FollowingPostLoaded(data: response);
           }else{
             yield FollowingPostFailure(msg: response.message);

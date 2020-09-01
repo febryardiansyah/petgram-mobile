@@ -22,7 +22,6 @@ class AuthRepository extends BaseService implements Auth {
         endpoint: 'user/signin',
         data: FormData.fromMap({'email': email, 'password': password}),
         requestType: RequestType.POST);
-    print(response.data);
     return response;
   }
 

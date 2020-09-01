@@ -1,22 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_shimmer/flutter_shimmer.dart';
 import 'package:petgram_mobile_app/bloc/my_profile_bloc/profile_bloc.dart';
-import 'package:petgram_mobile_app/screens/profile_screen/ProfileScreen.dart';
 import 'package:petgram_mobile_app/screens/profile_screen/profile_loading.dart';
 
-class MyProfileScreen extends StatefulWidget {
+import 'ProfileScreen.dart';
+
+class UserProfileScreen extends StatefulWidget {
+  final String id;
+
+
+  UserProfileScreen({this.id});
+
   @override
-  _MyProfileScreenState createState() => _MyProfileScreenState();
+  _UserProfileScreenState createState() => _UserProfileScreenState();
 }
 
-class _MyProfileScreenState extends State<MyProfileScreen> {
+class _UserProfileScreenState extends State<UserProfileScreen> {
+
   @override
   void initState() {
     super.initState();
-    BlocProvider.of<ProfileBloc>(context)..add(FetchMyProfile());
+    BlocProvider.of<ProfileBloc>(context).add(FetchUserProfile(
+      id: widget.id
+    ));
   }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -24,9 +31,9 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
         listener: (context,state){
           if(state is ProfileFailure){
             Scaffold.of(context)..hideCurrentSnackBar()
-                ..showSnackBar(SnackBar(
-                  content: Text(state.msg),
-                ));
+              ..showSnackBar(SnackBar(
+                content: Text(state.msg),
+              ));
           }
         },
         builder: (context,state){
@@ -39,8 +46,9 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
               child: Text(state.msg),
             );
           }
-          if(state is MyProfileLoaded){
+          if(state is UserProfileLoaded){
             return ProfileScreen(
+              showLogout: false,
               userDetail: state.userProfileModel.user,
             );
           }
@@ -50,4 +58,3 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
     );
   }
 }
-

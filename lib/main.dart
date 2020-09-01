@@ -39,7 +39,7 @@ class MyApp extends StatelessWidget {
           create: (_) => ProfileBloc(PostRepo()),
         ),
 
-    ],
+      ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         title: BaseString.appName,

@@ -5,5 +5,12 @@ abstract class ProfileEvent extends Equatable {
   @override
   List<Object> get props => [];
 }
-class FetchProfile extends ProfileEvent{}
+class FetchMyProfile extends ProfileEvent{}
+class FetchUserProfile extends ProfileEvent{
+  final String id;
+
+  FetchUserProfile({this.id});
+  @override
+  List<Object> get props => [id];
+}
 class ResetProfileEvent extends ProfileEvent{}

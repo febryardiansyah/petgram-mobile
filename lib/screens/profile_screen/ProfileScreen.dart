@@ -14,9 +14,10 @@ import 'package:petgram_mobile_app/screens/profile_screen/tab_child_list/profile
 
 class ProfileScreen extends StatefulWidget {
   final UserDetailModel userDetail;
+  bool showLogout;
 
 
-  ProfileScreen({this.userDetail});
+  ProfileScreen({this.userDetail,this.showLogout = true});
 
   @override
   ProfileScreenState createState() => ProfileScreenState();
@@ -27,6 +28,9 @@ const minAvatarSize = 30.0;
 const extraSpace = 70.0;
 
 class ProfileScreenState extends State<ProfileScreen> {
+
+  bool get showLogOutButton => widget.showLogout;
+
   @override
   Widget build(BuildContext context) {
     final userDetail = widget.userDetail.detailModel;
@@ -43,7 +47,7 @@ class ProfileScreenState extends State<ProfileScreen> {
                   delegate: MyHeaderDelegate(
                     extendedHeight: kToolbarHeight + avatarSize + extraSpace,
                     petname: userDetail.petname,name:userDetail.name,profilePic: userDetail.profilePic,
-                    postList: posts
+                    postList: posts,showLogOutButton:showLogOutButton
                       ),
                   pinned: true,
                 ),
@@ -112,8 +116,9 @@ class MyHeaderDelegate extends SliverPersistentHeaderDelegate {
   final double extendedHeight;
   final String name,petname,profilePic;
   final List<PostModel>postList;
+  bool showLogOutButton;
 
-  MyHeaderDelegate({this.extendedHeight,this.petname,this.name,this.profilePic,this.postList});
+  MyHeaderDelegate({this.extendedHeight,this.petname,this.name,this.profilePic,this.postList,this.showLogOutButton});
 
   @override
   Widget build(
@@ -160,7 +165,7 @@ class MyHeaderDelegate extends SliverPersistentHeaderDelegate {
                     },
                   ),
                   actions: [
-                    Container(
+                    showLogOutButton?Container(
                       width: 150,
                       child: Stack(
                         fit: StackFit.expand,
@@ -176,8 +181,6 @@ class MyHeaderDelegate extends SliverPersistentHeaderDelegate {
                                   onPressed: (){
 
                                     BlocProvider.of<SignInBloc>(context).add(SignOutBtnPressed());
-//                                    BlocProvider.of<ProfileBloc>(context).add(ResetProfileEvent());
-//                                    BlocProvider.of<FollowingPostBloc>(context).add(ResetFollowingPostEvent());
                                     showDialog(
                                         context: context,
                                         builder: (context){
@@ -189,7 +192,9 @@ class MyHeaderDelegate extends SliverPersistentHeaderDelegate {
                                     );
                                     Future.delayed(Duration(seconds: 3),(){
                                       print('after dialog');
-                                      Navigator.pushReplacementNamed(context, '/index');
+                                      BlocProvider.of<ProfileBloc>(context).add(ResetProfileEvent());
+                                      BlocProvider.of<FollowingPostBloc>(context).add(ResetFollowingPostEvent());
+                                      Navigator.pushNamedAndRemoveUntil(context, '/loginScreen', (route) => false);
                                     });
                                   },
                                 ),
@@ -198,7 +203,7 @@ class MyHeaderDelegate extends SliverPersistentHeaderDelegate {
                           )
                         ],
                       ),
-                    ),
+                    ):Container(),
                   ],
                   backgroundColor: Colors.transparent,
                 ),

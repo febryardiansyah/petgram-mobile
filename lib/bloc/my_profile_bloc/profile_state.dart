@@ -15,6 +15,15 @@ class MyProfileLoaded extends ProfileState{
   @override
   List<Object> get props => [userProfileModel];
 }
+
+class UserProfileLoaded extends ProfileState{
+  final UserProfileModel userProfileModel;
+
+  UserProfileLoaded({this.userProfileModel});
+  @override
+  List<Object> get props => [userProfileModel];
+}
+
 class ProfileFailure extends ProfileState{
   final msg;
 

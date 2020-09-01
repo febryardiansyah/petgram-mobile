@@ -27,6 +27,9 @@ class BaseService {
       }
     }on DioError catch(e){
       print(e);
+      if(e.error == DioErrorType.DEFAULT){
+        _response = Response(data: 'Check your internet connection');
+      }
       _response = e.response;
     }
 

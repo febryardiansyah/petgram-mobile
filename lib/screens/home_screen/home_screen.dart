@@ -35,6 +35,11 @@ class _HomeScreenState extends State<HomeScreen> {
             }
             if (state is FollowingPostLoaded) {
               final data = state.data;
+              if(state.data == null){
+                return Center(
+                  child: Text('No Post Yet'),
+                );
+              }
               return PostItem(data: data,);
             }
             if(state is FollowingPostLoading){
@@ -74,24 +79,30 @@ class PostItem extends StatelessWidget {
             children: [
               Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  children: [
-                    Container(
-                      width: 60.w,
-                      height: 60.h,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        image: DecorationImage(
-                          image: NetworkImage(_list.postedBy.profilePic),
-                          fit: BoxFit.cover
-                        )
+                child: GestureDetector(
+                  onTap: (){
+                    print(_list.postedBy.id);
+                    Navigator.pushNamed(context, '/userProfile',arguments: _list.postedBy.id);
+                  },
+                  child: Row(
+                    children: [
+                      Container(
+                        width: 60.w,
+                        height: 60.h,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          image: DecorationImage(
+                            image: NetworkImage(_list.postedBy.profilePic),
+                            fit: BoxFit.cover
+                          )
+                        ),
                       ),
-                    ),
-                    SizedBox(width: 10,),
-                    Text(_list.postedBy.name),
-                    Spacer(),
-                    Text('${_list.createdAt} ago',style: TextStyle(color: BaseColor.grey2,fontSize: 10),)
-                  ],
+                      SizedBox(width: 10,),
+                      Text(_list.postedBy.name),
+                      Spacer(),
+                      Text('${_list.createdAt} ago',style: TextStyle(color: BaseColor.grey2,fontSize: 10),)
+                    ],
+                  ),
                 ),
               ),
               GestureDetector(

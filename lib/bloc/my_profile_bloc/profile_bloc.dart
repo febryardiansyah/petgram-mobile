@@ -17,15 +17,18 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     ProfileEvent event,
   ) async* {
     final currentState = state;
-    if(event is FetchProfile){
-      if(currentState is ProfileFailure){
-        yield ProfileInitial();
-      }else if(currentState is MyProfileLoaded){
+
+    if(currentState is ProfileFailure){
+      yield ProfileInitial();
+    }
+    if(event is FetchMyProfile){
+      if(currentState is MyProfileLoaded){
         yield MyProfileLoaded(userProfileModel: currentState.userProfileModel);
       }else{
-        yield ProfileLoading();
         try{
+          yield ProfileLoading();
           final response = await _post.getMyProfile();
+
           if(response.status == true){
             yield MyProfileLoaded(userProfileModel: response);
           }else{
@@ -36,8 +39,26 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         }
       }
     }
+
     if(event is ResetProfileEvent){
       yield ProfileInitial();
+    }
+
+    if(event is FetchUserProfile){
+        try{
+          yield ProfileLoading();
+
+          final response = await _post.getUserProfile(event.id);
+
+          if(response.status == true){
+            yield UserProfileLoaded(userProfileModel: response);
+          }else{
+            yield ProfileFailure(msg: response.message);
+          }
+        }catch(e){
+          yield ProfileFailure(msg: e.toString());
+        }
+
     }
   }
 }
