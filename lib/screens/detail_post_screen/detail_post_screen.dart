@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:petgram_mobile_app/constants/base_color.dart';
+import 'package:petgram_mobile_app/helpers/shared_preferences/profile_pref.dart';
 import 'package:petgram_mobile_app/models/following_post_model.dart';
 import 'package:petgram_mobile_app/screens/detail_post_screen/comment_form.dart';
 
@@ -15,6 +16,19 @@ class DetailPostScreen extends StatefulWidget {
 
 class _DetailPostScreenState extends State<DetailPostScreen> {
   PostModel get post => widget.postModel;
+
+  String image = '';
+  _getImageLink()async{
+    String img = await ProfilePreference.getProfile();
+    setState(() {
+      image = img;
+    });
+  }
+  @override
+  void initState() {
+    super.initState();
+    _getImageLink();
+  }
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -29,21 +43,26 @@ class _DetailPostScreenState extends State<DetailPostScreen> {
         leading: IconButton(onPressed: (){
           Navigator.pop(context);
         },icon: Icon(Icons.arrow_back_ios),),
-        title: Row(
-            children: [
-          Container(
-            width: 70.w,
-            height: 70.h,
-            decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                image: DecorationImage(
-                    image: NetworkImage(post.postedBy.profilePic),
-                    fit: BoxFit.cover
-                )
+        title: GestureDetector(
+          onTap: (){
+            Navigator.pushNamed(context, '/userProfile',arguments: post.postedBy.id);
+          },
+          child: Row(
+              children: [
+            Container(
+              width: 70.w,
+              height: 70.h,
+              decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  image: DecorationImage(
+                      image: NetworkImage(post.postedBy.profilePic),
+                      fit: BoxFit.cover
+                  )
+              ),
             ),
-          ),
-          SizedBox(width: 8,),
-          Text(post.postedBy.name,style: TextStyle(fontWeight: FontWeight.bold,color: BaseColor.black),)]),
+            SizedBox(width: 8,),
+            Text(post.postedBy.name,style: TextStyle(fontWeight: FontWeight.bold,color: BaseColor.black),)]),
+        ),
         actions: [
           Center(child: Text('${post.createdAt} ago',style: TextStyle(color: BaseColor.grey2,fontSize: 12),))
         ],
@@ -127,7 +146,7 @@ class _DetailPostScreenState extends State<DetailPostScreen> {
               ),
                 Positioned(
                   bottom: 20,
-                    child: CommentForm())
+                    child: CommentForm(image: image,))
             ],
           ),
         ),

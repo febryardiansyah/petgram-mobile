@@ -17,7 +17,11 @@ class ProfilePhotosList extends StatelessWidget {
         crossAxisSpacing: 0
       ),
       itemBuilder: (context,i){
-        return Image.network(postList[i].imageUrl,fit: BoxFit.cover,);
+        return GestureDetector(
+          onTap: (){
+            Navigator.pushNamed(context, '/detailPost',arguments: postList[i]);
+          },
+            child: Image.network(postList[i].imageUrl,fit: BoxFit.cover,));
       },
     );
   }

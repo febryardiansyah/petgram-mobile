@@ -4,7 +4,7 @@ import 'package:petgram_mobile_app/helpers/shared_preferences/token_pref.dart';
 class HeaderInterceptor extends InterceptorsWrapper{
   @override
   Future onRequest(RequestOptions options) async{
-    options.baseUrl = 'https://petgram-server.herokuapp.com/';
+    options.baseUrl = 'https://pegtram.azurewebsites.net/';
 //    options.baseUrl = 'http://6db487588f77.ngrok.io/';
     final token = await TokenPref.getToken();
     if(token != null){

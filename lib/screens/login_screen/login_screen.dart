@@ -42,8 +42,15 @@ class _LoginScreenState extends State<LoginScreen> {
       body: BlocConsumer<SignInBloc,SignInState>(
         listener: (context,state){
           if(state is SignInLoading){
-            Scaffold.of(context)..hideCurrentSnackBar()
-              ..showSnackBar(SnackBar(content: Text('Loading...'),));
+            AwesomeDialog(
+                context: context,
+                dialogType: DialogType.NO_HEADER,
+                animType: AnimType.BOTTOMSLIDE,
+                title: 'Loading',
+                desc: 'Wait a sec..',
+            )..show();
+//            Scaffold.of(context)..hideCurrentSnackBar()
+//              ..showSnackBar(SnackBar(content: Text('Loading...'),));
           }
           if(state is SignInSuccess){
             Scaffold.of(context)..hideCurrentSnackBar()

@@ -2,12 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:petgram_mobile_app/constants/base_color.dart';
+import 'package:petgram_mobile_app/helpers/shared_preferences/profile_pref.dart';
 
 class CommentForm extends StatelessWidget {
+  final String image;
+
+  CommentForm({this.image});
+
   @override
   Widget build(BuildContext context) {
     ScreenUtil.init(context);
     final size = MediaQuery.of(context).size;
+
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Row(
@@ -17,11 +23,11 @@ class CommentForm extends StatelessWidget {
             height: 100.h,
             decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: BaseColor.grey3
-//                image: DecorationImage(
-//                    image: NetworkImage(post.postedBy.profilePic),
-//                    fit: BoxFit.cover
-//                )
+                color: BaseColor.grey3,
+                image: DecorationImage(
+                    image: NetworkImage(this.image),
+                    fit: BoxFit.cover
+                )
             ),
           ),
           SizedBox(width: 10,),

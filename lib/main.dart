@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:petgram_mobile_app/bloc/following_post_bloc/following_post_bloc.dart';
+import 'package:petgram_mobile_app/bloc/like_unlike_bloc/like_unlike_bloc.dart';
 import 'package:petgram_mobile_app/bloc/my_profile_bloc/profile_bloc.dart';
 import 'package:petgram_mobile_app/bloc/register_bloc/register_bloc.dart';
 import 'package:petgram_mobile_app/bloc/signin_bloc/sign_in_bloc.dart';
@@ -37,6 +38,9 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider<ProfileBloc>(
           create: (_) => ProfileBloc(PostRepo()),
+        ),
+        BlocProvider<LikeUnlikeBloc>(
+          create: (_) => LikeUnlikeBloc(PostRepo()),
         ),
 
       ],

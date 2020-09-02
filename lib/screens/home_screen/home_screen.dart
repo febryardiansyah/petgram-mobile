@@ -3,12 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:petgram_mobile_app/bloc/following_post_bloc/following_post_bloc.dart';
+import 'package:petgram_mobile_app/bloc/like_unlike_bloc/like_unlike_bloc.dart';
 import 'package:petgram_mobile_app/bloc/signin_bloc/sign_in_bloc.dart';
 import 'package:petgram_mobile_app/components/my_custom_view.dart';
 import 'package:petgram_mobile_app/constants/base_color.dart';
 import 'package:petgram_mobile_app/constants/base_string.dart';
 import 'package:petgram_mobile_app/helpers/shared_preferences/profile_pref.dart';
 import 'package:petgram_mobile_app/models/following_post_model.dart';
+import 'package:petgram_mobile_app/models/like_unlike_model.dart';
+import 'package:petgram_mobile_app/repositories/post_repo.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -20,6 +23,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
    BlocProvider.of<FollowingPostBloc>(context)..add(FetchFollowingPost());
+   BlocProvider.of<LikeUnlikeBloc>(context);
   }
 
   @override
@@ -53,10 +57,20 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 }
-class PostItem extends StatelessWidget {
+
+class PostItem extends StatefulWidget {
   final FollowingPostModel data;
 
   PostItem({this.data});
+
+  @override
+  _PostItemState createState() => _PostItemState();
+}
+
+class _PostItemState extends State<PostItem> {
+
+  bool _isLiked = false;
+  int _totalLikes = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -66,10 +80,11 @@ class PostItem extends StatelessWidget {
       separatorBuilder: (context,i) => Divider(),
       shrinkWrap: true,
       physics: BouncingScrollPhysics(),
-      itemCount: data.postModel.length,
+      itemCount: widget.data.postModel.length,
       itemBuilder: (context,i){
-        final _list = data.postModel[i];
-        if(data.postModel.length == 0){
+        final _list = widget.data.postModel[i];
+        _totalLikes = _list.likes.length;
+        if(widget.data.postModel.length == 0){
           return Text('No Post yet');
         }
         return Container(
@@ -131,8 +146,23 @@ class PostItem extends StatelessWidget {
                   children: [
                     Row(
                       children: [
-                        _list.isLiked?Icon(Icons.favorite,color: BaseColor.red,):Icon(Icons.favorite_border),
-                        Text('${_list.likes.length.toString()} likes'),
+                        _list.isLiked ?GestureDetector(
+                          child: Icon(Icons.favorite,color: BaseColor.red,),
+                        onTap: (){
+
+                          context.bloc<LikeUnlikeBloc>().add(UnlikeEvent(id: _list.id));
+
+                        },):
+                        GestureDetector(
+                          child: Icon(Icons.favorite_border),
+                          onTap: (){
+
+                            context.bloc<LikeUnlikeBloc>().add(LikeEvent(id: _list.id));
+
+
+                          },
+                        ),
+                        Text('${_list.likes.length} likes'),
                         SizedBox(width: 10,),
                         Icon(Icons.chat_bubble_outline),
                         Text('${_list.comments.length} comments'),
@@ -154,5 +184,6 @@ class PostItem extends StatelessWidget {
       },
     );
   }
+
 }
 
