@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:petgram_mobile_app/bloc/following_post_bloc/following_post_bloc.dart';
+import 'package:petgram_mobile_app/bloc/like_unlike_bloc/like_unlike_bloc.dart';
 import 'package:petgram_mobile_app/constants/base_color.dart';
 import 'package:petgram_mobile_app/helpers/shared_preferences/profile_pref.dart';
 import 'package:petgram_mobile_app/models/following_post_model.dart';
@@ -18,15 +21,19 @@ class _DetailPostScreenState extends State<DetailPostScreen> {
   PostModel get post => widget.postModel;
 
   String image = '';
+
   _getImageLink()async{
     String img = await ProfilePreference.getProfile();
     setState(() {
       image = img;
     });
   }
+
   @override
   void initState() {
     super.initState();
+    BlocProvider.of<FollowingPostBloc>(context)..add(FetchFollowingPost());
+    BlocProvider.of<LikeUnlikeBloc>(context);
     _getImageLink();
   }
   @override
@@ -67,87 +74,104 @@ class _DetailPostScreenState extends State<DetailPostScreen> {
           Center(child: Text('${post.createdAt} ago',style: TextStyle(color: BaseColor.grey2,fontSize: 12),))
         ],
       ),
-      body: SingleChildScrollView(
-        child: Container(
-          width: size.width,
-          height: size.height*0.9,
-          child: Stack(
-            children: [
+      body: BlocBuilder<FollowingPostBloc,FollowingPostState>(
+        builder:(context,state)=> SingleChildScrollView(
+          child: Container(
+            width: size.width,
+            height: size.height*0.9,
+            child: Stack(
+              children: [
 //            Container(
 //              width: size.width,
 //              height: size.height,
 //            ),
-              Column(
-                children: [
-                  Container(
-                    width: size.width,
-                    height: 700.h,
-                    decoration: BoxDecoration(
-                        image: DecorationImage(
-                            image: NetworkImage(post.imageUrl),
-                            fit: BoxFit.cover
-                        )
-                    ),
-                  ),
-                  SizedBox(width: 10,),
-                  Padding(
-                    padding: EdgeInsets.only(left: 8,top: 4),
-                    child: Wrap(
-                      children: [
-                        Row(
-                          children: [
-                            Icon(Icons.favorite_border),
-                            Text('${post.likes.length.toString()} likes'),
-                            SizedBox(width: 10,),
-                            Icon(Icons.chat_bubble_outline),
-                            Text('${post.comments.length} comments'),
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            Text(post.postedBy.name,style: TextStyle(fontWeight: FontWeight.bold),),
-                            SizedBox(width: 5,),
-                            Expanded(child: Text(post.caption))
-                          ],
-                        )
-                      ],
-                    ),
-                  ),
-                  post.comments.length == 0?Padding(
-                    padding: EdgeInsets.only(top: 30),
-                    child: Text('no comment yet',style: TextStyle(color: BaseColor.grey3,fontStyle: FontStyle.italic),),
-                  ):Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Column(
-                        children: post.comments.map((e){
-                          return Row(
-                            children: [
-                              Container(
-                                width: 60.w,
-                                height: 60.h,
-                                decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    image: DecorationImage(
-                                        image: NetworkImage(e.postedBy.profilePic),
-                                        fit: BoxFit.cover
-                                    )
-                                ),
-                              ),
-                              SizedBox(width: 10,),
-                              Text(e.postedBy.name,style: TextStyle(fontWeight: FontWeight.bold),),
-                              SizedBox(width: 10,),
-                              Text(e.text),
-                            ],
-                          );
-                        }).toList(),
+                Column(
+                  children: [
+                    Container(
+                      width: size.width,
+                      height: 700.h,
+                      decoration: BoxDecoration(
+                          image: DecorationImage(
+                              image: NetworkImage(post.imageUrl),
+                              fit: BoxFit.cover
+                          )
                       ),
-                    )
-                ],
-              ),
-                Positioned(
-                  bottom: 20,
-                    child: CommentForm(image: image,))
-            ],
+                    ),
+                    SizedBox(width: 10,),
+                    Padding(
+                      padding: EdgeInsets.only(left: 8,top: 4),
+                      child: Wrap(
+                        children: [
+                          Row(
+                            children: [
+                              post.isLiked ?GestureDetector(
+                                child: Icon(Icons.favorite,color: BaseColor.red,),
+                                onTap: (){
+
+                                  context.bloc<LikeUnlikeBloc>().add(UnlikeEvent(id: post.id));
+                                  context.bloc<FollowingPostBloc>().add(UpdateFollowingPost());
+
+                                },):GestureDetector(
+                                child: Icon(Icons.favorite_border),
+                                onTap: (){
+
+                                  context.bloc<LikeUnlikeBloc>().add(LikeEvent(id: post.id));
+                                  context.bloc<FollowingPostBloc>().add(UpdateFollowingPost());
+
+                                },
+                              ),
+                              Text('${post.likes.length.toString()} likes'),
+                              SizedBox(width: 10,),
+                              Icon(Icons.chat_bubble_outline),
+                              Text('${post.comments.length} comments'),
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              Text(post.postedBy.name,style: TextStyle(fontWeight: FontWeight.bold),),
+                              SizedBox(width: 5,),
+                              Expanded(child: Text(post.caption))
+                            ],
+                          )
+                        ],
+                      ),
+                    ),
+                    post.comments.length == 0?Padding(
+                      padding: EdgeInsets.only(top: 30),
+                      child: Text('no comment yet',style: TextStyle(color: BaseColor.grey3,fontStyle: FontStyle.italic),),
+                    ):Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(
+                          children: post.comments.map((e){
+                            return Row(
+                              children: [
+                                Container(
+                                  width: 60.w,
+                                  height: 60.h,
+                                  decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      image: DecorationImage(
+                                          image: NetworkImage(e.postedBy.profilePic),
+                                          fit: BoxFit.cover
+                                      )
+                                  ),
+                                ),
+                                SizedBox(width: 10,),
+                                Text(e.postedBy.name,style: TextStyle(fontWeight: FontWeight.bold),),
+                                SizedBox(width: 10,),
+                                Text(e.text),
+                              ],
+                            );
+                          }).toList(),
+                        ),
+                      )
+                  ],
+                ),
+                  Positioned(
+                    bottom: 20,
+                      child: CommentForm(image: image,))
+              ],
+            ),
           ),
         ),
       ),

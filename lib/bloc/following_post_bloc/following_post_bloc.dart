@@ -40,5 +40,19 @@ class FollowingPostBloc extends Bloc<FollowingPostEvent, FollowingPostState> {
     if(event is ResetFollowingPostEvent){
       yield FollowingPostInitial();
     }
+    if(event is UpdateFollowingPost){
+      if(currentState is FollowingPostLoaded){
+        try{
+          final response = await _post.getFollowingPost();
+          if(response.message == 'success') {
+            yield FollowingPostLoaded(data: response);
+          }else{
+            yield FollowingPostFailure(msg: 'No internet');
+          }
+        }catch(e){
+          yield FollowingPostFailure(msg: 'No internet');
+        }
+      }
+    }
   }
 }

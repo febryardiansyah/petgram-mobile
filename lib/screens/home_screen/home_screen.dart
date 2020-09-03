@@ -31,9 +31,18 @@ class _HomeScreenState extends State<HomeScreen> {
     return MyCustomView(
         title: 'Home',
         subTitle: Text('Petgram',style: TextStyle(fontFamily: BaseString.fBillabong,color: BaseColor.purple2,fontSize: 40),),
-        body: BlocBuilder<FollowingPostBloc,FollowingPostState>(
+        body: BlocConsumer<FollowingPostBloc,FollowingPostState>(
+          listener: (context,state){
+            print('listener <==> $state');
+            if(state is FollowingPostFailure){
+              Scaffold.of(context)..hideCurrentSnackBar()
+                  ..showSnackBar(SnackBar(
+                    content: Text('no internet'),
+                  ));
+            }
+          },
           builder: (context,state){
-            print(state);
+            print('builder <===> $state');
             if(state is FollowingPostFailure){
               return Text(state.msg);
             }
@@ -69,9 +78,6 @@ class PostItem extends StatefulWidget {
 
 class _PostItemState extends State<PostItem> {
 
-  bool _isLiked = false;
-  int _totalLikes = 0;
-
   @override
   Widget build(BuildContext context) {
     ScreenUtil.init(context);
@@ -83,7 +89,7 @@ class _PostItemState extends State<PostItem> {
       itemCount: widget.data.postModel.length,
       itemBuilder: (context,i){
         final _list = widget.data.postModel[i];
-        _totalLikes = _list.likes.length;
+
         if(widget.data.postModel.length == 0){
           return Text('No Post yet');
         }
@@ -125,7 +131,7 @@ class _PostItemState extends State<PostItem> {
                   Navigator.pushNamed(context, '/detailPost',arguments: PostModel(
                     id: _list.id,comments: _list.comments,likes: _list.likes,
                     createdAt: _list.createdAt,postedBy: _list.postedBy,
-                    imageUrl: _list.imageUrl,caption: _list.caption
+                    imageUrl: _list.imageUrl,caption: _list.caption,isLiked: _list.isLiked
                   ));
                 },
                 child: Container(
@@ -151,6 +157,7 @@ class _PostItemState extends State<PostItem> {
                         onTap: (){
 
                           context.bloc<LikeUnlikeBloc>().add(UnlikeEvent(id: _list.id));
+                          context.bloc<FollowingPostBloc>().add(UpdateFollowingPost());
 
                         },):
                         GestureDetector(
@@ -158,7 +165,7 @@ class _PostItemState extends State<PostItem> {
                           onTap: (){
 
                             context.bloc<LikeUnlikeBloc>().add(LikeEvent(id: _list.id));
-
+                            context.bloc<FollowingPostBloc>().add(UpdateFollowingPost());
 
                           },
                         ),

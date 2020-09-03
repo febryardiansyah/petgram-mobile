@@ -12,6 +12,8 @@ class FollowingPostLoaded extends FollowingPostState {
   final FollowingPostModel data;
 
   FollowingPostLoaded({this.data});
+
+
   @override
   List<Object> get props => [data];
 }
