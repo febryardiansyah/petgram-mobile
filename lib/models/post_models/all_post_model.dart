@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
-import 'package:petgram_mobile_app/models/following_post_model.dart';
+
+import 'following_post_model.dart';
 
 class AllPostModel extends Equatable{
   bool status;

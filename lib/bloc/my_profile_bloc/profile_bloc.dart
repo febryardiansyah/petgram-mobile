@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:petgram_mobile_app/models/user_profile_model.dart';
+import 'package:petgram_mobile_app/models/user_models/user_profile_model.dart';
 import 'package:petgram_mobile_app/repositories/post_repo.dart';
 
 part 'profile_event.dart';

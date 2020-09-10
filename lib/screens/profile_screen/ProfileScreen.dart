@@ -8,8 +8,8 @@ import 'package:petgram_mobile_app/bloc/following_post_bloc/following_post_bloc.
 import 'package:petgram_mobile_app/bloc/my_profile_bloc/profile_bloc.dart';
 import 'package:petgram_mobile_app/bloc/signin_bloc/sign_in_bloc.dart';
 import 'package:petgram_mobile_app/constants/base_color.dart';
-import 'package:petgram_mobile_app/models/following_post_model.dart';
-import 'package:petgram_mobile_app/models/user_profile_model.dart';
+import 'package:petgram_mobile_app/models/post_models/following_post_model.dart';
+import 'package:petgram_mobile_app/models/user_models/user_profile_model.dart';
 import 'package:petgram_mobile_app/screens/profile_screen/tab_child_list/profile_photos_list.dart';
 
 class ProfileScreen extends StatefulWidget {

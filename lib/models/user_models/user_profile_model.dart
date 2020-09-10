@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:petgram_mobile_app/models/following_post_model.dart';
+import 'package:petgram_mobile_app/models/post_models/following_post_model.dart';
 
 class UserProfileModel extends Equatable {
   bool status;

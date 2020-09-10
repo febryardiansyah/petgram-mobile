@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
-import 'package:petgram_mobile_app/models/like_unlike_model.dart';
+import 'package:petgram_mobile_app/models/post_models/like_unlike_model.dart';
 import 'package:petgram_mobile_app/repositories/post_repo.dart';
 
 part 'like_unlike_event.dart';

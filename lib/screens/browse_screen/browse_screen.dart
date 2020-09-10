@@ -5,7 +5,7 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:petgram_mobile_app/bloc/all_post_bloc/all_post_bloc.dart';
 import 'package:petgram_mobile_app/components/my_custom_view.dart';
 import 'package:petgram_mobile_app/constants/base_color.dart';
-import 'package:petgram_mobile_app/models/following_post_model.dart';
+import 'package:petgram_mobile_app/models/post_models/following_post_model.dart';
 
 class BrowseScreen extends StatefulWidget {
   @override

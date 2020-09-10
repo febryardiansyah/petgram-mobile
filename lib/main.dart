@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:petgram_mobile_app/bloc/all_post_bloc/all_post_bloc.dart';
+import 'package:petgram_mobile_app/bloc/detail_post_bloc/detail_post_bloc.dart';
 import 'package:petgram_mobile_app/bloc/following_post_bloc/following_post_bloc.dart';
 import 'package:petgram_mobile_app/bloc/like_unlike_bloc/like_unlike_bloc.dart';
 import 'package:petgram_mobile_app/bloc/my_profile_bloc/profile_bloc.dart';
@@ -43,6 +44,9 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider<AllPostBloc>(
           create: (_) => AllPostBloc(PostRepo()),
+        ),
+        BlocProvider<DetailPostBloc>(
+          create: (_) => DetailPostBloc(PostRepo()),
         ),
 
       ],

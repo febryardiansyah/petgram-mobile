@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:petgram_mobile_app/models/following_post_model.dart';
+import 'package:petgram_mobile_app/models/post_models/following_post_model.dart';
 import 'package:petgram_mobile_app/repositories/post_repo.dart';
 
 part 'following_post_event.dart';
