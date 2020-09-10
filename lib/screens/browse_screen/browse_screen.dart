@@ -29,7 +29,7 @@ class _BrowseScreenState extends State<BrowseScreen> {
       body: BlocBuilder<AllPostBloc,AllPostState>(
         builder: (context,state){
           if(state is AllPostLoaded){
-            return BrowsePostList(posts: state.allPostModel.allPost,);
+            return BrowsePostList(postList: state.allPostModel.allPost,);
           }else if(state is AllPostFailure){
             return Text(state.msg);
           }else if(state is AllPostLoading){
@@ -43,9 +43,11 @@ class _BrowseScreenState extends State<BrowseScreen> {
 }
 
 class BrowsePostList extends StatelessWidget {
-  final List<PostModel>posts;
 
-  BrowsePostList({this.posts});
+  final List<PostModel>postList;
+  final PostModel post;
+
+  BrowsePostList({this.postList,this.post});
 
   @override
   Widget build(BuildContext context) {
@@ -77,17 +79,21 @@ class BrowsePostList extends StatelessWidget {
         Expanded(
           child: StaggeredGridView.countBuilder(
             crossAxisCount: 4,
-            itemCount: posts.length,
+            itemCount: postList.length,
             shrinkWrap: true,
-            itemBuilder: (BuildContext context, int index) => Container(
-                decoration: BoxDecoration(
+            itemBuilder: (BuildContext context, int index) => GestureDetector(
+              onTap: (){
+                Navigator.pushNamed(context, '/detailPost',arguments: postList[index]);
+              },
+              child: Container(
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: NetworkImage(postList[index].imageUrl),
+                      fit: BoxFit.cover
+                    )
+                  ),
 
-                  image: DecorationImage(
-                    image: NetworkImage(posts[index].imageUrl),
-                    fit: BoxFit.cover
-                  )
-                ),
-
+              ),
             ),
             staggeredTileBuilder: (int index) =>
             StaggeredTile.count(2, index.isEven ? 3 : 1),

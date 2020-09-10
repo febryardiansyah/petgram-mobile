@@ -5,6 +5,7 @@ import 'package:petgram_mobile_app/bloc/detail_post_bloc/detail_post_bloc.dart';
 import 'package:petgram_mobile_app/bloc/following_post_bloc/following_post_bloc.dart';
 import 'package:petgram_mobile_app/bloc/like_unlike_bloc/like_unlike_bloc.dart';
 import 'package:petgram_mobile_app/bloc/my_profile_bloc/profile_bloc.dart';
+import 'package:petgram_mobile_app/bloc/postComment_bloc/post_comment_bloc.dart';
 import 'package:petgram_mobile_app/bloc/register_bloc/register_bloc.dart';
 import 'package:petgram_mobile_app/bloc/signin_bloc/sign_in_bloc.dart';
 import 'package:petgram_mobile_app/constants/base_string.dart';
@@ -47,6 +48,9 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider<DetailPostBloc>(
           create: (_) => DetailPostBloc(PostRepo()),
+        ),
+        BlocProvider<PostCommentBloc>(
+          create: (_) => PostCommentBloc(PostRepo()),
         ),
 
       ],

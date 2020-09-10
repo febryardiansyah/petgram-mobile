@@ -14,6 +14,7 @@ abstract class POST{
   Future<Response> unlikePost(String id);
   Future<AllPostModel> getAllPost();
   Future<DetailPostModel> getDetailPost({String id});
+  Future<Response> postComment({String id,String text});
 }
 
 class PostRepo extends BaseService implements POST{
@@ -80,5 +81,13 @@ class PostRepo extends BaseService implements POST{
     final Response response = await request(endpoint: 'post/detailpost/$id',requestType: RequestType.GET);
     DetailPostModel res = DetailPostModel.fromMap(response.data);
     return res;
+  }
+
+  @override
+  Future<Response> postComment({String id,String text}) async {
+    final Response response = await request(endpoint:'post/comment',requestType:RequestType.PUT,data: FormData.fromMap({
+      'postId':id,'text':text
+    }) );
+    return response;
   }
 }

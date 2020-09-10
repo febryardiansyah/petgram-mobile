@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:petgram_mobile_app/bloc/detail_post_bloc/detail_post_bloc.dart';
 import 'package:petgram_mobile_app/bloc/following_post_bloc/following_post_bloc.dart';
 import 'package:petgram_mobile_app/bloc/like_unlike_bloc/like_unlike_bloc.dart';
+import 'package:petgram_mobile_app/bloc/postComment_bloc/post_comment_bloc.dart';
 import 'package:petgram_mobile_app/constants/base_color.dart';
 import 'package:petgram_mobile_app/helpers/shared_preferences/profile_pref.dart';
 import 'package:petgram_mobile_app/models/post_models/detail_post_model.dart';
@@ -26,7 +27,6 @@ class _DetailPostScreenState extends State<DetailPostScreen> {
 
   String image = '';
   bool _isShowLove = false;
-
   _getImageLink()async{
     String img = await ProfilePreference.getProfile();
     setState(() {
@@ -38,6 +38,7 @@ class _DetailPostScreenState extends State<DetailPostScreen> {
   void initState() {
     super.initState();
     BlocProvider.of<DetailPostBloc>(context).add(FetchDetailPost(id: post.id));
+    BlocProvider.of<PostCommentBloc>(context);
     _getImageLink();
   }
   @override
@@ -213,7 +214,9 @@ class _DetailPostScreenState extends State<DetailPostScreen> {
                    ),
                    Positioned(
                        bottom: 20,
-                       child: CommentForm(image: image,))
+                       child: CommentForm(image: image,
+                         id: _data.id,
+                       ))
                  ],
                ),
              ),
