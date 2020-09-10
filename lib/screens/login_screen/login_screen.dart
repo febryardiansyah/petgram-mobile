@@ -42,21 +42,24 @@ class _LoginScreenState extends State<LoginScreen> {
       body: BlocConsumer<SignInBloc,SignInState>(
         listener: (context,state){
           if(state is SignInLoading){
-            AwesomeDialog(
-                context: context,
-                dialogType: DialogType.NO_HEADER,
-                animType: AnimType.BOTTOMSLIDE,
-                title: 'Loading',
-                desc: 'Wait a sec..',
-            )..show();
-//            Scaffold.of(context)..hideCurrentSnackBar()
-//              ..showSnackBar(SnackBar(content: Text('Loading...'),));
+            Scaffold.of(context)
+              ..showSnackBar(SnackBar(content:  Row(
+                children: <Widget>[
+                  CircularProgressIndicator(),
+                  Container(
+                    margin: EdgeInsets.only(left: 15.0),
+                    child: Text('Tunggu Sebentar'),
+                  )
+                ],
+              ),));
           }
           if(state is SignInSuccess){
             Scaffold.of(context)..hideCurrentSnackBar()
                 ..showSnackBar(SnackBar(content: Text(state.msg,style: TextStyle(color: BaseColor.white),),backgroundColor: BaseColor.purple1,));
+            Navigator.pushNamed(context, '/home');
           }
           if(state is SignInFailure){
+            Scaffold.of(context)..hideCurrentSnackBar();
             AwesomeDialog(
               context: context,
               dialogType: DialogType.ERROR,
@@ -68,9 +71,9 @@ class _LoginScreenState extends State<LoginScreen> {
           }
         },
         builder:(context,state) {
-          if(state is SignInSuccess){
-            return MyNavigationRail();
-          }
+//          if(state is SignInSuccess){
+//            return MyNavigationRail();
+//          }
           return Stack(
           children: [
             Container(

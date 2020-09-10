@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:petgram_mobile_app/index.dart';
 import 'package:petgram_mobile_app/screens/detail_post_screen/detail_post_screen.dart';
+import 'package:petgram_mobile_app/screens/home_screen/my_navigation_rail.dart';
 import 'package:petgram_mobile_app/screens/login_screen/login_screen.dart';
 import 'package:petgram_mobile_app/screens/profile_screen/my_profile_screen.dart';
 import 'package:petgram_mobile_app/screens/profile_screen/user_profile_screen.dart';
@@ -15,6 +16,8 @@ Route generateRoute(RouteSettings settings){
   switch(settings.name){
     case '/':
       return _pageRoute(builder: SplashScreen(),settings: settings);
+    case '/home':
+      return _pageRoute(builder: MyNavigationRail(),settings: settings);
     case '/index':
       return _pageRoute(builder: Index(),settings: settings);
     case '/loginScreen':

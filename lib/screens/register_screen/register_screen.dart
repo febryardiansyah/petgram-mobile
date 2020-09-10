@@ -88,16 +88,16 @@ class _RegisterScreenState extends State<RegisterScreen> {
               padding: EdgeInsets.only(top: 70,left: 10,right: 10),
               child: ListView(
                 children: [
-                  Container(
-                    height: 300.h,
-                    width: 300.h,
-                    child: Icon(Icons.camera_alt,color: BaseColor.grey2,),
-                    decoration: BoxDecoration(
-                      border: Border.all(width: 3,color: BaseColor.grey2),
-                      color: BaseColor.grey1,
-                      shape: BoxShape.circle,
-                    ),
-                  ),
+//                  Container(
+//                    height: 300.h,
+//                    width: 300.h,
+//                    child: Icon(Icons.camera_alt,color: BaseColor.grey2,),
+//                    decoration: BoxDecoration(
+//                      border: Border.all(width: 3,color: BaseColor.grey2),
+//                      color: BaseColor.grey1,
+//                      shape: BoxShape.circle,
+//                    ),
+//                  ),
                   SizedBox(height: 20,),
                   MyFormField(
                     textEditingController: _name,

@@ -10,12 +10,18 @@ class FollowingPostInitial extends FollowingPostState {}
 class FollowingPostLoading extends FollowingPostState {}
 class FollowingPostLoaded extends FollowingPostState {
   final FollowingPostModel data;
+  bool isLiked;
 
-  FollowingPostLoaded({this.data});
-
+  FollowingPostLoaded({this.data,this.isLiked});
+  FollowingPostLoaded copyWith({FollowingPostModel data, bool isLiked}){
+    return FollowingPostLoaded(
+      data: this.data ?? data,
+      isLiked: this.isLiked ?? isLiked,
+    );
+  }
 
   @override
-  List<Object> get props => [data];
+  List<Object> get props => [data,isLiked];
 }
 class FollowingPostFailure extends FollowingPostState {
   final String msg;

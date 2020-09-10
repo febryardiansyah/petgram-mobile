@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:petgram_mobile_app/models/all_post_model.dart';
 import 'package:petgram_mobile_app/models/following_post_model.dart';
 import 'package:petgram_mobile_app/models/like_unlike_model.dart';
 import 'package:petgram_mobile_app/models/user_profile_model.dart';
@@ -10,6 +11,7 @@ abstract class POST{
   Future<UserProfileModel> getUserProfile(String id);
   Future<LikeUnlikeModel> likePost(String id);
   Future<Response> unlikePost(String id);
+  Future<AllPostModel> getAllPost();
 }
 
 class PostRepo extends BaseService implements POST{
@@ -21,6 +23,7 @@ class PostRepo extends BaseService implements POST{
       return null;
     }
     var res = FollowingPostModel.fromMap(response.data);
+    print(res.message);
     return res;
   }
 
@@ -60,5 +63,13 @@ class PostRepo extends BaseService implements POST{
     }),requestType: RequestType.PUT);
     print(response.data['message']);
     return response;
+  }
+
+  @override
+  Future<AllPostModel> getAllPost() async{
+    final Response response = await request(endpoint: 'post/allpost',requestType: RequestType.GET);
+    print(response.data);
+    final AllPostModel res = AllPostModel.fromMap(response.data);
+    return res;
   }
 }

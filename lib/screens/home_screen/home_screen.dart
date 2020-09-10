@@ -1,7 +1,9 @@
+import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:like_button/like_button.dart';
 import 'package:petgram_mobile_app/bloc/following_post_bloc/following_post_bloc.dart';
 import 'package:petgram_mobile_app/bloc/like_unlike_bloc/like_unlike_bloc.dart';
 import 'package:petgram_mobile_app/bloc/signin_bloc/sign_in_bloc.dart';
@@ -33,7 +35,7 @@ class _HomeScreenState extends State<HomeScreen> {
         subTitle: Text('Petgram',style: TextStyle(fontFamily: BaseString.fBillabong,color: BaseColor.purple2,fontSize: 40),),
         body: BlocConsumer<FollowingPostBloc,FollowingPostState>(
           listener: (context,state){
-            print('listener <==> $state');
+//            print('listener <==> $state');
             if(state is FollowingPostFailure){
               Scaffold.of(context)..hideCurrentSnackBar()
                   ..showSnackBar(SnackBar(
@@ -78,6 +80,12 @@ class PostItem extends StatefulWidget {
 
 class _PostItemState extends State<PostItem> {
 
+  bool _isShowLove = false;
+  bool _isLiked = false;
+  int _selectedIndex = 0;
+  List _loveList = [];
+  int _totalLikes = 0;
+
   @override
   Widget build(BuildContext context) {
     ScreenUtil.init(context);
@@ -88,7 +96,30 @@ class _PostItemState extends State<PostItem> {
       physics: BouncingScrollPhysics(),
       itemCount: widget.data.postModel.length,
       itemBuilder: (context,i){
+
         final _list = widget.data.postModel[i];
+
+//          _isLiked = _list.isLiked;
+//          _totalLikes = _list.likes.length;
+
+        _loveList.insertAll(i, [FlareActor('assets/flares/love_heart.flr',animation: _isShowLove?'Like heart':'null',fit: BoxFit.contain,)]);
+
+        Future<bool> onLikeButtonTapped(bool isLiked) async{
+          if(!_list.isLiked){
+            context.bloc<LikeUnlikeBloc>().add(LikeEvent(id: _list.id));
+            context.bloc<FollowingPostBloc>().add(UpdateFollowingPost());
+            setState(() {
+              _list.isLiked = true;
+            });
+          }else{
+            context.bloc<LikeUnlikeBloc>().add(UnlikeEvent(id: _list.id));
+            context.bloc<FollowingPostBloc>().add(UpdateFollowingPost());
+            setState(() {
+              _list.isLiked = false;
+            });
+          }
+          return _list.isLiked;
+        }
 
         if(widget.data.postModel.length == 0){
           return Text('No Post yet');
@@ -121,12 +152,34 @@ class _PostItemState extends State<PostItem> {
                       SizedBox(width: 10,),
                       Text(_list.postedBy.name),
                       Spacer(),
-                      Text('${_list.createdAt} ago',style: TextStyle(color: BaseColor.grey2,fontSize: 10),)
+                      Text('${_list.createdAt}',style: TextStyle(color: BaseColor.grey2,fontSize: 10),)
                     ],
                   ),
                 ),
               ),
               GestureDetector(
+                onDoubleTap: (){
+
+                  context.bloc<LikeUnlikeBloc>().add(LikeEvent(id: _list.id));
+
+
+                print('${_loveList[i]} $i');
+
+                  setState(() {
+                    _isShowLove = true;
+                    _selectedIndex = i;
+//                    _totalLikes = _list.likes.length;
+//                    _list.isLiked = true;
+//                    _isLiked = _list.isLiked;
+
+                });
+                  Future.delayed(Duration(seconds: 3),(){
+                    setState(() {
+                      context.bloc<FollowingPostBloc>().add(UpdateFollowingPost());
+                      _isShowLove = false;
+                    });
+                  });
+                },
                 onTap: (){
                   Navigator.pushNamed(context, '/detailPost',arguments: PostModel(
                     id: _list.id,comments: _list.comments,likes: _list.likes,
@@ -134,16 +187,30 @@ class _PostItemState extends State<PostItem> {
                     imageUrl: _list.imageUrl,caption: _list.caption,isLiked: _list.isLiked
                   ));
                 },
-                child: Container(
-                  width: size.width,
-                  height: 560.h,
-                  decoration: BoxDecoration(
-                    color: BaseColor.grey3,
-                    image: DecorationImage(
-                      image: NetworkImage(_list.imageUrl),
-                      fit: BoxFit.cover
-                    )
-                  ),
+                child: Stack(
+                  children: [
+                    Container(
+                      width: size.width,
+                      height: 560.h,
+                      decoration: BoxDecoration(
+                        color: BaseColor.grey3,
+                        image: DecorationImage(
+                          image: NetworkImage(_list.imageUrl),
+                          fit: BoxFit.cover
+                        )
+                      ),
+                    ),
+                    _isShowLove?i == _selectedIndex?Positioned.fill(
+                      child: Center(
+                        child: Container(
+                          width: 130,
+                          height: 130,
+//                            child: Icon(Icons.favorite,size: 70,color: BaseColor.red,),
+                          child: _loveList[_selectedIndex],
+                        ),
+                      ),
+                    ):Center():Center()
+                  ],
                 ),
               ),
               Padding(
@@ -152,20 +219,64 @@ class _PostItemState extends State<PostItem> {
                   children: [
                     Row(
                       children: [
-                        _list.isLiked ?GestureDetector(
+//                        LikeButton(
+//                          circleColor: CircleColor(start: Color(0xff00ddff), end: Color(0xff0099cc)),
+//                          bubblesColor: BubblesColor(
+//                            dotPrimaryColor: Color(0xff33b5e5),
+//                            dotSecondaryColor: Color(0xff0099cc),
+//                          ),
+//                          likeBuilder: (bool isLiked) {
+//                            return _list.isLiked?Icon(
+//                              Icons.favorite,
+//                              color: BaseColor.red,
+//                            ):Icon(Icons.favorite_border,);
+//                          },
+//                          onTap: onLikeButtonTapped,
+//                          likeCount: _list.likes.length,
+//                          countBuilder: (int count, bool isLiked, String text) {
+//                            var color = _list.isLiked ? Colors.deepPurpleAccent : Colors.grey;
+//                            Widget result;
+//                            if (count == 0) {
+//                              result = Text(
+//                                "0",
+//                                style: TextStyle(color: color),
+//                              );
+//                            } else
+//                              result = Text(
+//                                text,
+//                                style: TextStyle(color: color),
+//                              );
+//                            return result;
+//                          },
+//                        ),
+                        _list.isLiked ? GestureDetector(
                           child: Icon(Icons.favorite,color: BaseColor.red,),
                         onTap: (){
-
+//                          setState(() {
+//                            _list.likes.length -=1;
+//                            _totalLikes = _list.likes.length;
+//                            _list.isLiked = false;
+//                            _isLiked = _list.isLiked;
+//                          });
                           context.bloc<LikeUnlikeBloc>().add(UnlikeEvent(id: _list.id));
+                          Future.delayed(Duration(milliseconds: 500));
                           context.bloc<FollowingPostBloc>().add(UpdateFollowingPost());
 
                         },):
                         GestureDetector(
                           child: Icon(Icons.favorite_border),
                           onTap: (){
+//                            setState(() {
+//                              _list.likes.length +=1;
+//                              _totalLikes = _list.likes.length;
+//                              _list.isLiked = true;
+//                              _isLiked = _list.isLiked;
+//                            });
 
                             context.bloc<LikeUnlikeBloc>().add(LikeEvent(id: _list.id));
-                            context.bloc<FollowingPostBloc>().add(UpdateFollowingPost());
+                            Future.delayed(Duration(milliseconds: 500),(){
+                              context.bloc<FollowingPostBloc>().add(UpdateFollowingPost());
+                            });
 
                           },
                         ),
