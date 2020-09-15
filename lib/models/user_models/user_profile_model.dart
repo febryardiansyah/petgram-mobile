@@ -37,6 +37,7 @@ class UserDetailModel {
 
 class DetailModel {
   String id, email, name, petname, profilePic;
+  bool isMe;
   List<String> following;
   List<String> followers;
 
@@ -47,7 +48,8 @@ class DetailModel {
       this.petname,
       this.profilePic,
       this.following,
-      this.followers});
+      this.followers,
+      this.isMe});
 
   factory DetailModel.fromMap(Map<String, dynamic> json) {
     return DetailModel(
@@ -56,6 +58,7 @@ class DetailModel {
       petname: json['petname'],
       profilePic: json['profilePic'],
       email: json['email'],
+      isMe: json['isMe'],
       followers: List<String>.from(json['followers']),
       following: List<String>.from(json['following']),
     );

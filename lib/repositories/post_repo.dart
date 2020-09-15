@@ -15,6 +15,8 @@ abstract class POST{
   Future<AllPostModel> getAllPost();
   Future<DetailPostModel> getDetailPost({String id});
   Future<Response> postComment({String id,String text});
+  Future<bool> deleteComment({String id,String commentId});
+  Future<bool> deletePost(String id);
 }
 
 class PostRepo extends BaseService implements POST{
@@ -89,5 +91,20 @@ class PostRepo extends BaseService implements POST{
       'postId':id,'text':text
     }) );
     return response;
+  }
+  @override
+  Future<bool> deleteComment({String id, String commentId}) async{
+    final Response response = await request(endpoint: 'post/deletecomment',requestType: RequestType.PUT,data: FormData.fromMap({
+      'postId':id,'commentId':commentId
+    }));
+    bool status = response.data['status'];
+    return status;
+  }
+
+  @override
+  Future<bool> deletePost(String id) async{
+    final Response response = await request(endpoint: 'post/deletepost/$id',requestType: RequestType.DELETE);
+    final bool status = response.data['status'];
+    return status;
   }
 }

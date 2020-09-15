@@ -47,7 +47,7 @@ class ProfileScreenState extends State<ProfileScreen> {
                   delegate: MyHeaderDelegate(
                     extendedHeight: kToolbarHeight + avatarSize + extraSpace,
                     petname: userDetail.petname,name:userDetail.name,profilePic: userDetail.profilePic,
-                    postList: posts,showLogOutButton:showLogOutButton
+                    postList: posts,showLogOutButton:showLogOutButton,isMe: userDetail.isMe
                       ),
                   pinned: true,
                 ),
@@ -99,7 +99,7 @@ class ProfileScreenState extends State<ProfileScreen> {
             body: TabBarView(
               physics: NeverScrollableScrollPhysics(),
               children: [
-                ProfilePhotosList(postList: posts,),
+                ProfilePhotosList(postList: posts,isMe: userDetail.isMe,),
                 Center(child: Text('${userDetail.followers.length} followers',style: TextStyle(color: BaseColor.black,fontSize: 12),)),
                 Center(child: Text('${userDetail.following.length} following',style: TextStyle(color: BaseColor.black,fontSize: 12),)),
 
@@ -116,9 +116,10 @@ class MyHeaderDelegate extends SliverPersistentHeaderDelegate {
   final double extendedHeight;
   final String name,petname,profilePic;
   final List<PostModel>postList;
+  final bool isMe;
   bool showLogOutButton;
 
-  MyHeaderDelegate({this.extendedHeight,this.petname,this.name,this.profilePic,this.postList,this.showLogOutButton});
+  MyHeaderDelegate({this.extendedHeight,this.petname,this.name,this.profilePic,this.postList,this.showLogOutButton,this.isMe});
 
   @override
   Widget build(
@@ -165,8 +166,8 @@ class MyHeaderDelegate extends SliverPersistentHeaderDelegate {
                     },
                   ),
                   actions: [
-                    showLogOutButton?Container(
-                      width: 150,
+                    Container(
+                      width: 200,
                       child: Stack(
                         fit: StackFit.expand,
                         children: [
@@ -176,7 +177,11 @@ class MyHeaderDelegate extends SliverPersistentHeaderDelegate {
                             child: Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                IconButton(
+                                isMe?FlatButton(
+                                  child: Text('Follow'),
+                                  onPressed: (){},
+                                ):Center(),
+                                isMe?IconButton(
                                   icon: Icon(FontAwesomeIcons.signOutAlt,color: BaseColor.black),
                                   onPressed: (){
 
@@ -197,13 +202,13 @@ class MyHeaderDelegate extends SliverPersistentHeaderDelegate {
                                       Navigator.pushNamedAndRemoveUntil(context, '/loginScreen', (route) => false);
                                     });
                                   },
-                                ),
+                                ):Center(),
                               ],
                             ),
-                          )
+                          ),
                         ],
                       ),
-                    ):Container(),
+                    ),
                   ],
                   backgroundColor: Colors.transparent,
                 ),
@@ -228,6 +233,7 @@ class MyHeaderDelegate extends SliverPersistentHeaderDelegate {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
+
                         Icon(Icons.person_outline),
                             SizedBox(width: 8,),
                             Text(name,
@@ -245,7 +251,7 @@ class MyHeaderDelegate extends SliverPersistentHeaderDelegate {
                           style: Theme.of(context).textTheme.headline6),
                         ],
                   ),
-                )
+                ),
               ]),
             ),
           ),

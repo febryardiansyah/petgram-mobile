@@ -15,3 +15,13 @@ class CommentEvent extends PostCommentEvent{
   @override
   List<Object> get props => [id,text];
 }
+
+class DeleteCommentEvent extends PostCommentEvent{
+  final String id;
+  final String commentId;
+
+  DeleteCommentEvent({this.id,this.commentId});
+
+  @override
+  List<Object> get props => [id,commentId];
+}

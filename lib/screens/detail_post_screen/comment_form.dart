@@ -69,9 +69,11 @@ class CommentForm extends StatelessWidget {
                   id: id,text: _textCtrl.text,
                 ));
                 Future.delayed(Duration(milliseconds: 500),(){
-                  context.bloc<DetailPostBloc>().add(UpdateDetailPost(id: id));
-                  context.bloc<FollowingPostBloc>().add(UpdateFollowingPost());
+                  BlocProvider.of<DetailPostBloc>(context).add(UpdateDetailPost(id: id));
+                  BlocProvider.of<FollowingPostBloc>(context).add(UpdateFollowingPost());
                 });
+                FocusScope.of(context).requestFocus(FocusNode());
+                _textCtrl.clear();
               },
               child: Container(
                 decoration: BoxDecoration(

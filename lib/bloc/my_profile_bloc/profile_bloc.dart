@@ -22,11 +22,8 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
       yield ProfileInitial();
     }
     if(event is FetchMyProfile){
-      if(currentState is MyProfileLoaded){
-        yield MyProfileLoaded(userProfileModel: currentState.userProfileModel);
-      }else{
-        try{
-          yield ProfileLoading();
+      yield ProfileLoading();
+      try{
           final response = await _post.getMyProfile();
 
           if(response.status == true){
@@ -37,7 +34,6 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         }catch(e){
           yield ProfileFailure(msg: e.toString());
         }
-      }
     }
 
     if(event is ResetProfileEvent){

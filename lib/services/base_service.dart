@@ -22,6 +22,7 @@ class BaseService {
           _response = await _dio.put(endpoint,data: data);
           break;
         case RequestType.DELETE:
+          _response = await _dio.delete(endpoint);
           break;
         default:
           break;
