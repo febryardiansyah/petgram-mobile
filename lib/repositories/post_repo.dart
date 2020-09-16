@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:dio/dio.dart';
 import 'package:petgram_mobile_app/models/post_models/all_post_model.dart';
 import 'package:petgram_mobile_app/models/post_models/detail_post_model.dart';
@@ -17,6 +19,7 @@ abstract class POST{
   Future<Response> postComment({String id,String text});
   Future<bool> deleteComment({String id,String commentId});
   Future<bool> deletePost(String id);
+  Future<Response> createPost({File image,String caption});
 }
 
 class PostRepo extends BaseService implements POST{
@@ -107,4 +110,26 @@ class PostRepo extends BaseService implements POST{
     final bool status = response.data['status'];
     return status;
   }
+
+  @override
+  Future<Response> createPost({File image, String caption}) async{
+    FormData data = FormData();
+    if(image == null){
+       data = FormData.fromMap({
+        "caption":caption
+      });
+    }else{
+      String fileName = image.path.split('/').last;
+      data = FormData.fromMap({
+        "image": await MultipartFile.fromFile(image.path,filename: fileName),
+        "caption":caption
+      });
+    }
+
+    final Response response = await request(endpoint: 'post/createpost',data: data,requestType: RequestType.POST);
+    print(response.data);
+
+    return response;
+  }
+
 }

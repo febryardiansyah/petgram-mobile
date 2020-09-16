@@ -10,8 +10,9 @@ class MyCustomView extends StatefulWidget {
   final Widget body;
   final String title;
   final Widget subTitle;
+  final bool showCreatePost;
 
-  MyCustomView({this.body,this.title,this.subTitle});
+  MyCustomView({this.body,this.title,this.subTitle,this.showCreatePost = false});
 
   @override
   _MyCustomViewState createState() => _MyCustomViewState();
@@ -49,6 +50,14 @@ class _MyCustomViewState extends State<MyCustomView> {
           stretch: true,
           leading: _scroll?Icon(FontAwesomeIcons.cat,color: BaseColor.purple2,):null,
           title: Text(_scroll?widget.title:'',style: TextStyle(color: BaseColor.black,fontWeight: FontWeight.bold),),
+          actions: [
+            _scroll && widget.showCreatePost?IconButton(
+              icon: Icon(Icons.add,color: BaseColor.purple2,),
+              onPressed: (){
+                Navigator.pushNamed(context, '/createPost');
+              },
+            ):Center()
+          ],
           pinned: true,
           floating: false,
           backgroundColor:Colors.white,

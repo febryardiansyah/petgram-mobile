@@ -45,14 +45,16 @@ class PostModel {
 
 class CommentModel {
   String id, text;
+  bool isCommentByMe;
   PostedByModel postedBy;
 
-  CommentModel({this.id, this.text, this.postedBy});
+  CommentModel({this.id, this.text, this.postedBy,this.isCommentByMe});
 
   factory CommentModel.fromMap(Map<String, dynamic> json) {
     return CommentModel(
       id: json['_id'],
       text: json['text'],
+      isCommentByMe: json['isCommentbyMe'],
       postedBy: PostedByModel.fromMap(json['postedBy']),
     );
   }

@@ -24,23 +24,24 @@ class DetailPostScreen extends StatefulWidget {
 }
 
 class _DetailPostScreenState extends State<DetailPostScreen> {
+
   PostModel get post => widget.postModel;
   GlobalKey<ScaffoldState> _key = GlobalKey();
-  String image = '';
+  String image = 'https://res.cloudinary.com/febryar/image/upload/v1600259749/post/2020-09-16T12:35:47.303Z.jpg';
   bool _isShowLove = false;
+
   _getImageLink()async{
     String img = await ProfilePreference.getProfile();
-    setState(() {
-      image = img;
-    });
+    image = img;
   }
 
   @override
   void initState() {
     super.initState();
+    _getImageLink();
     BlocProvider.of<DetailPostBloc>(context).add(FetchDetailPost(id: post.id));
     BlocProvider.of<PostCommentBloc>(context);
-    _getImageLink();
+
   }
   @override
   Widget build(BuildContext context) {
@@ -98,7 +99,7 @@ class _DetailPostScreenState extends State<DetailPostScreen> {
           return Scaffold(
               floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
               floatingActionButton: Container(height: 50,color: BaseColor.white,
-                child: CommentForm(id: _data.id,image: _data.imageUrl,),),
+                child: CommentForm(id: _data.id,image: image,),),
               appBar: AppBar(
                 iconTheme: IconThemeData(
                     color: BaseColor.black
@@ -232,7 +233,29 @@ class _DetailPostScreenState extends State<DetailPostScreen> {
                           physics: BouncingScrollPhysics(),
                           itemCount: _data.comments.length,
                           itemBuilder: (context,i){
-                            return Slidable(
+                            return !_data.comments[i].isCommentByMe?
+                            Padding(
+                              padding: EdgeInsets.symmetric(vertical: 10.0),
+                              child: Row(
+                                children: [
+                                  Container(
+                                    width: 60.w,
+                                    height: 60.h,
+                                    decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        image: DecorationImage(
+                                            image: NetworkImage(_data.comments[i].postedBy.profilePic),
+                                            fit: BoxFit.cover
+                                        )
+                                    ),
+                                  ),
+                                  SizedBox(width: 10,),
+                                  Text(_data.comments[i].postedBy.name,style: TextStyle(fontWeight: FontWeight.bold),),
+                                  SizedBox(width: 10,),
+                                  Expanded(child: Text(_data.comments[i].text)),
+                                ],
+                              ),
+                            ):Slidable(
                                actionPane: SlidableDrawerActionPane(),
                                secondaryActions: <Widget>[
                                  IconSlideAction(

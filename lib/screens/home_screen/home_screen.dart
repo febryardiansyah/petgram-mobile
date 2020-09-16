@@ -31,6 +31,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return MyCustomView(
         title: 'Home',
+        showCreatePost: true,
         subTitle: Text('Petgram',style: TextStyle(fontFamily: BaseString.fBillabong,color: BaseColor.purple2,fontSize: 40),),
         body: BlocConsumer<FollowingPostBloc,FollowingPostState>(
           listener: (context,state){
@@ -49,7 +50,7 @@ class _HomeScreenState extends State<HomeScreen> {
             }
             if (state is FollowingPostLoaded) {
               final data = state.data;
-              if(state.data == null){
+              if(state.data.postModel.length == 0){
                 return Center(
                   child: Text('No Post Yet'),
                 );

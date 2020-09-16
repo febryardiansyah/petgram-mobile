@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:petgram_mobile_app/bloc/all_post_bloc/all_post_bloc.dart';
+import 'package:petgram_mobile_app/bloc/create_post_bloc/create_post_bloc.dart';
 import 'package:petgram_mobile_app/bloc/delete_post_bloc/delete_post_bloc.dart';
 import 'package:petgram_mobile_app/bloc/detail_post_bloc/detail_post_bloc.dart';
 import 'package:petgram_mobile_app/bloc/following_post_bloc/following_post_bloc.dart';
@@ -56,7 +57,9 @@ class MyApp extends StatelessWidget {
         BlocProvider<DeletePostBloc>(
           create: (_) => DeletePostBloc(PostRepo()),
         ),
-
+        BlocProvider<CreatePostBloc>(
+          create: (_) => CreatePostBloc(PostRepo()),
+        ),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

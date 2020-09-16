@@ -34,7 +34,7 @@ class CommentForm extends StatelessWidget {
                   shape: BoxShape.circle,
                   color: BaseColor.grey3,
                   image: DecorationImage(
-                      image: NetworkImage(this.image),
+                      image: NetworkImage(image),
                       fit: BoxFit.cover
                   )
               ),

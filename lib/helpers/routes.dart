@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:petgram_mobile_app/index.dart';
+import 'package:petgram_mobile_app/screens/create_post_screen/create_post_screen.dart';
 import 'package:petgram_mobile_app/screens/detail_post_screen/detail_post_screen.dart';
 import 'package:petgram_mobile_app/screens/home_screen/my_navigation_rail.dart';
 import 'package:petgram_mobile_app/screens/login_screen/login_screen.dart';
@@ -30,5 +31,7 @@ Route generateRoute(RouteSettings settings){
       return _pageRoute(builder: MyProfileScreen(),settings: settings);
     case '/userProfile':
       return _pageRoute(builder: UserProfileScreen(id: args),settings: settings,);
+    case '/createPost':
+      return _pageRoute(builder: CreatePostScreen(),settings: settings);
   }
 }

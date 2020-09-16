@@ -177,7 +177,7 @@ class MyHeaderDelegate extends SliverPersistentHeaderDelegate {
                             child: Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                isMe?FlatButton(
+                                !isMe?FlatButton(
                                   child: Text('Follow'),
                                   onPressed: (){},
                                 ):Center(),
@@ -197,7 +197,7 @@ class MyHeaderDelegate extends SliverPersistentHeaderDelegate {
                                     );
                                     Future.delayed(Duration(seconds: 3),(){
                                       print('after dialog');
-                                      BlocProvider.of<ProfileBloc>(context).add(ResetProfileEvent());
+//                                      BlocProvider.of<ProfileBloc>(context).add(ResetProfileEvent());
                                       BlocProvider.of<FollowingPostBloc>(context).add(ResetFollowingPostEvent());
                                       Navigator.pushNamedAndRemoveUntil(context, '/loginScreen', (route) => false);
                                     });
