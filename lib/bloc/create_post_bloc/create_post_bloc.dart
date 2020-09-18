@@ -22,7 +22,7 @@ class CreatePostBloc extends Bloc<CreatePostEvent, CreatePostState> {
       try{
         final Response response = await _post.createPost(image: event.image,caption: event.caption);
         final bool status = response.data['status'];
-        final String msg = response.data['error']['message'] ?? response.data['error'] ;
+        final String msg = response.data['error'];
 
         if(status){
           yield CreatePostSuccess();

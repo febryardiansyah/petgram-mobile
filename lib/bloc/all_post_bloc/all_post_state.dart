@@ -12,6 +12,11 @@ class AllPostLoaded extends AllPostState {
   final AllPostModel allPostModel;
 
   AllPostLoaded({this.allPostModel});
+  AllPostLoaded copyWith({AllPostModel allPostModel}){
+    return AllPostLoaded(
+      allPostModel: allPostModel ?? this.allPostModel
+    );
+  }
   @override
   List<Object> get props => [allPostModel];
 }

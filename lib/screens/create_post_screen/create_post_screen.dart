@@ -1,8 +1,10 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:petgram_mobile_app/bloc/all_post_bloc/all_post_bloc.dart';
 import 'package:petgram_mobile_app/bloc/create_post_bloc/create_post_bloc.dart';
 import 'package:petgram_mobile_app/components/confirm_button.dart';
 import 'package:petgram_mobile_app/components/my_form_field.dart';
@@ -15,6 +17,7 @@ class CreatePostScreen extends StatefulWidget {
 
 class _CreatePostScreenState extends State<CreatePostScreen> {
   TextEditingController _caption = TextEditingController();
+  ScrollController _scrollController = ScrollController();
   File _image;
   bool _isShowClear = false;
   final _picker = ImagePicker();
@@ -32,6 +35,11 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
   void initState() {
     super.initState();
     BlocProvider.of<CreatePostBloc>(context);
+    _scrollController.addListener(() {
+//      if(_scrollController.position.userScrollDirection == ScrollDirection.forward || _scrollController.position.userScrollDirection == ScrollDirection.reverse){
+//        FocusScope.of(context).requestFocus(FocusNode());
+//      }
+    });
   }
   @override
   Widget build(BuildContext context) {
@@ -68,61 +76,68 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
         child: BlocBuilder<CreatePostBloc,CreatePostState>(
           builder:(context,state) => Padding(
             padding: const EdgeInsets.all(10),
-            child: ListView(
-              children: [
-                GestureDetector(
-                  onTap: (){
-                    getImage();
-                  },
-                  child: Container(
-                    height: 200,
-                    width: MediaQuery.of(context).size.width,
-                    decoration: BoxDecoration(
-                      border: Border.all(width: 1,color: BaseColor.grey2),
-                      color: BaseColor.grey1,
-                    ),
-                    child: _image != null?Image.file(_image,fit: BoxFit.cover,):Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Icon(Icons.camera_alt,color: BaseColor.grey2,),
-                        Text('Pick Image',style: TextStyle(color: BaseColor.grey2),)
-                      ],
-                    ),
-                  ),
-                ),
-                SizedBox(height: 20,),
-                _isShowClear?Align(
-                  alignment: Alignment.centerRight,
-                  child: IconButton(
-                    onPressed: (){
-                      setState(() {
-                        _image = null;
-                        _isShowClear = false;
-                      });
+            child: GestureDetector(
+              onTap: (){
+                FocusScope.of(context).requestFocus(FocusNode());
+              },
+              child: ListView(
+                controller: _scrollController,
+                children: [
+                  GestureDetector(
+                    onTap: (){
+                      getImage();
                     },
-                    icon: Icon(Icons.delete,color: BaseColor.red,),
+                    child: Container(
+                      height: 200,
+                      width: MediaQuery.of(context).size.width,
+                      decoration: BoxDecoration(
+                        border: Border.all(width: 1,color: BaseColor.grey2),
+                        color: BaseColor.grey1,
+                      ),
+                      child: _image != null?Image.file(_image,fit: BoxFit.cover,):Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Icon(Icons.camera_alt,color: BaseColor.grey2,),
+                          Text('Pick Image',style: TextStyle(color: BaseColor.grey2),)
+                        ],
+                      ),
+                    ),
                   ),
-                ):Center(),
-                MyFormField(
-                  keyboardType: TextInputType.text,
-                  textEditingController: _caption,
-                  hintText: 'caption',
-                ),
-                SizedBox(height: 40,),
-                ConfirmButton(
-                  width: MediaQuery.of(context).size.width,
-                  height: 50,
-                  text: Center(
-                    child: Text('Done',style: TextStyle(color: BaseColor.white,fontWeight: FontWeight.bold,fontSize: 24),),
+                  SizedBox(height: 20,),
+                  _isShowClear?Align(
+                    alignment: Alignment.centerRight,
+                    child: IconButton(
+                      onPressed: (){
+                        setState(() {
+                          _image = null;
+                          _isShowClear = false;
+                        });
+                      },
+                      icon: Icon(Icons.delete,color: BaseColor.red,),
+                    ),
+                  ):Center(),
+                  MyFormField(
+                    keyboardType: TextInputType.text,
+                    textEditingController: _caption,
+                    hintText: 'caption',
                   ),
-                  onTap: (){
-                    context.bloc<CreatePostBloc>().add(CreatePost(
-                      image: _image,caption: _caption.text
-                    ));
-                  },
-                )
-              ],
+                  SizedBox(height: 40,),
+                  ConfirmButton(
+                    width: MediaQuery.of(context).size.width,
+                    height: 50,
+                    text: Center(
+                      child: Text('Done',style: TextStyle(color: BaseColor.white,fontWeight: FontWeight.bold,fontSize: 24),),
+                    ),
+                    onTap: (){
+                      context.bloc<CreatePostBloc>().add(CreatePost(
+                        image: _image,caption: _caption.text
+                      ));
+                      BlocProvider.of<AllPostBloc>(context).add(UpdateAllPost());
+                    },
+                  )
+                ],
+              ),
             ),
           ),
         ),

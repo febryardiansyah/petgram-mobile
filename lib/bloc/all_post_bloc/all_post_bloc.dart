@@ -33,5 +33,15 @@ class AllPostBloc extends Bloc<AllPostEvent, AllPostState> {
         yield AllPostFailure(msg: e.toString());
       }
     }
+    if(event is UpdateAllPost){
+      if(currentState is AllPostLoaded){
+        try{
+          final AllPostModel response = await _post.getAllPost();
+          yield currentState.copyWith(allPostModel: response);
+        }catch(e){
+          yield AllPostFailure(msg: e.toString());
+        }
+      }
+    }
   }
 }

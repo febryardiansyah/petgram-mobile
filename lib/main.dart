@@ -55,7 +55,7 @@ class MyApp extends StatelessWidget {
           create: (_) => PostCommentBloc(PostRepo()),
         ),
         BlocProvider<DeletePostBloc>(
-          create: (_) => DeletePostBloc(PostRepo()),
+          create: (_) => DeletePostBloc(PostRepo(),ProfileBloc(PostRepo())),
         ),
         BlocProvider<CreatePostBloc>(
           create: (_) => CreatePostBloc(PostRepo()),

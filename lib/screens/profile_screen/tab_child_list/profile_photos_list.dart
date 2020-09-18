@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:petgram_mobile_app/bloc/all_post_bloc/all_post_bloc.dart';
 import 'package:petgram_mobile_app/bloc/delete_post_bloc/delete_post_bloc.dart';
+import 'package:petgram_mobile_app/bloc/following_post_bloc/following_post_bloc.dart';
 import 'package:petgram_mobile_app/bloc/my_profile_bloc/profile_bloc.dart';
 import 'package:petgram_mobile_app/constants/base_color.dart';
 import 'package:petgram_mobile_app/models/post_models/following_post_model.dart';
@@ -29,6 +31,8 @@ class ProfilePhotosList extends StatelessWidget {
                 child: Image.network(
                   postList[i].imageUrl,
                   fit: BoxFit.cover,
+                  height: MediaQuery.of(context).size.height,
+                  width: MediaQuery.of(context).size.width,
                 )),
             isMe?Positioned(
               bottom: 0,
@@ -40,17 +44,44 @@ class ProfilePhotosList extends StatelessWidget {
                 ),
                 child: Center(
                   child: IconButton(
-                    icon: Icon(Icons.delete,color: BaseColor.white,),
+                    icon: Icon(Icons.more_vert,color: BaseColor.white,),
                     onPressed: (){
-                      BlocProvider.of<DeletePostBloc>(context)..add(DeletePost(
-                        id: postList[i].id
-                      ));
+                      showModalBottomSheet(
+                          context: context,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8)
+                          ),
+                          builder: (context)=>Container(
+                        height: 130.0,
+                         child: Column(
+                           children: [
+                             ListTile(
+                               leading: Icon(Icons.delete),
+                               title: Text('Delete Post'),
+                               onTap: (){
+                                 BlocProvider.of<DeletePostBloc>(context)..add(DeletePost(
+                                     id: postList[i].id
+                                 ));
+                                 if(isMe){
+                                   Future.delayed(Duration(seconds: 2),(){
+                                     BlocProvider.of<ProfileBloc>(context).add(FetchMyProfile());
+                                     BlocProvider.of<FollowingPostBloc>(context).add(UpdateFollowingPost());
+                                     BlocProvider.of<AllPostBloc>(context).add(FetchAllPostEvent());
+                                     Navigator.pop(context);
+                                   });
+                                 }
+                               },
+                             ),
+                             ListTile(
+                               leading: Icon(Icons.edit),
+                               title: Text('Edit Post'),
+                               onTap: (){
 
-                      if(isMe){
-                        BlocProvider.of<ProfileBloc>(context).add(FetchMyProfile());
-                      }else{
-                        BlocProvider.of<ProfileBloc>(context).add(FetchUserProfile());
-                      }
+                               },
+                             ),
+                           ],
+                         ),
+                      ));
                     },
                   ),
                 ),

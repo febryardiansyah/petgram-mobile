@@ -6,3 +6,4 @@ abstract class AllPostEvent extends Equatable {
   List<Object> get props => [];
 }
 class FetchAllPostEvent extends AllPostEvent{}
+class UpdateAllPost extends AllPostEvent {}

@@ -180,7 +180,10 @@ class MyHeaderDelegate extends SliverPersistentHeaderDelegate {
                                 !isMe?FlatButton(
                                   child: Text('Follow'),
                                   onPressed: (){},
-                                ):Center(),
+                                ):FlatButton(
+                                  child: Text('Edit Profile'),
+                                  onPressed: (){},
+                                ),
                                 isMe?IconButton(
                                   icon: Icon(FontAwesomeIcons.signOutAlt,color: BaseColor.black),
                                   onPressed: (){
