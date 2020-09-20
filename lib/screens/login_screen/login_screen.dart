@@ -48,7 +48,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   CircularProgressIndicator(),
                   Container(
                     margin: EdgeInsets.only(left: 15.0),
-                    child: Text('Tunggu Sebentar'),
+                    child: Text('Loading..'),
                   )
                 ],
               ),));

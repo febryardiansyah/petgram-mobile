@@ -10,7 +10,7 @@ class LikeUnlikeModel{
       message: json['message'],
       status: json['status'],
       isLiked: json['isLiked'],
-      totalLikes: json['result']
+      totalLikes: TotalLikesModel.fromMap(json['result'])
     );
   }
 }

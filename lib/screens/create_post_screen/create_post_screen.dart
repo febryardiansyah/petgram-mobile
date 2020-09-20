@@ -56,13 +56,24 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
         listener: (context,state){
           print(state);
           if(state is CreatePostSuccess){
-            Scaffold.of(context)..hideCurrentSnackBar();
+            BlocProvider.of<AllPostBloc>(context).add(UpdateAllPost());
+            Scaffold.of(context)..hideCurrentSnackBar()..showSnackBar(SnackBar(
+              content: Text('Create Post Success'),
+            ));
             Navigator.pop(context);
             _image = null;
           }
           if(state is CreatePostLoading){
             Scaffold.of(context)..hideCurrentSnackBar()..showSnackBar(
-              SnackBar(content: Text('Uploading...'),)
+              SnackBar(content: Row(
+                children: <Widget>[
+                  CircularProgressIndicator(),
+                  Container(
+                    margin: EdgeInsets.only(left: 15.0),
+                    child: Text('Uploading..'),
+                  )
+                ],
+              ),)
             );
           }
           if(state is CreatePostFailure){
@@ -133,7 +144,6 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                       context.bloc<CreatePostBloc>().add(CreatePost(
                         image: _image,caption: _caption.text
                       ));
-                      BlocProvider.of<AllPostBloc>(context).add(UpdateAllPost());
                     },
                   )
                 ],

@@ -10,8 +10,9 @@ import 'package:petgram_mobile_app/models/post_models/following_post_model.dart'
 class ProfilePhotosList extends StatelessWidget {
   final List<PostModel> postList;
   final bool isMe;
+  final GlobalKey<ScaffoldState> scaffoldKey;
 
-  ProfilePhotosList({this.postList,this.isMe});
+  ProfilePhotosList({this.postList,this.isMe,this.scaffoldKey});
 
   @override
   Widget build(BuildContext context) {
@@ -51,37 +52,50 @@ class ProfilePhotosList extends StatelessWidget {
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8)
                           ),
-                          builder: (context)=>Container(
+                          builder: (context)=>BlocListener<DeletePostBloc,DeletePostState>(
+                            listener: (context,state){
+                              if(state is DeletePostSuccess){
+                                print('success');
+                                BlocProvider.of<ProfileBloc>(context).add(FetchMyProfile());
+                                BlocProvider.of<AllPostBloc>(context).add(FetchAllPostEvent());
+                                scaffoldKey.currentState.showSnackBar(SnackBar(
+                                  content: Text('Delete Success'),
+                                ));
+                              }
+                              if(state is DeletePostFailure){
+
+                              }
+                            },
+                            child: Container(
                         height: 130.0,
                          child: Column(
-                           children: [
-                             ListTile(
-                               leading: Icon(Icons.delete),
-                               title: Text('Delete Post'),
-                               onTap: (){
-                                 BlocProvider.of<DeletePostBloc>(context)..add(DeletePost(
-                                     id: postList[i].id
-                                 ));
-                                 if(isMe){
-                                   Future.delayed(Duration(seconds: 2),(){
-                                     BlocProvider.of<ProfileBloc>(context).add(FetchMyProfile());
-                                     BlocProvider.of<FollowingPostBloc>(context).add(UpdateFollowingPost());
-                                     BlocProvider.of<AllPostBloc>(context).add(FetchAllPostEvent());
-                                     Navigator.pop(context);
-                                   });
-                                 }
-                               },
-                             ),
-                             ListTile(
-                               leading: Icon(Icons.edit),
-                               title: Text('Edit Post'),
-                               onTap: (){
+                             children: [
+                               ListTile(
+                                 leading: Icon(Icons.delete),
+                                 title: Text('Delete Post'),
+                                 onTap: (){
+                                   BlocProvider.of<DeletePostBloc>(context)..add(DeletePost(
+                                       id: postList[i].id
+                                   ));
+                                     Future.delayed(Duration(seconds: 1),(){
+//                                     BlocProvider.of<ProfileBloc>(context).add(FetchMyProfile());
+//                                     BlocProvider.of<FollowingPostBloc>(context).add(UpdateFollowingPost());
+//                                     BlocProvider.of<AllPostBloc>(context).add(FetchAllPostEvent());
+                                       Navigator.pop(context);
+                                     });
+                                 },
+                               ),
+                               ListTile(
+                                 leading: Icon(Icons.edit),
+                                 title: Text('Edit Post'),
+                                 onTap: (){
 
-                               },
-                             ),
-                           ],
+                                 },
+                               ),
+                             ],
                          ),
-                      ));
+                      ),
+                          ));
                     },
                   ),
                 ),

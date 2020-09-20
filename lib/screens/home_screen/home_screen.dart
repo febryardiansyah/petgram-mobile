@@ -108,17 +108,11 @@ class _PostItemState extends State<PostItem> {
           if(!_list.isLiked){
             context.bloc<LikeUnlikeBloc>().add(LikeEvent(id: _list.id));
             context.bloc<FollowingPostBloc>().add(UpdateFollowingPost());
-            setState(() {
-              _list.isLiked = true;
-            });
           }else{
             context.bloc<LikeUnlikeBloc>().add(UnlikeEvent(id: _list.id));
             context.bloc<FollowingPostBloc>().add(UpdateFollowingPost());
-            setState(() {
-              _list.isLiked = false;
-            });
           }
-          return _list.isLiked;
+          return true;
         }
 
         if(widget.data.postModel.length == 0){
@@ -168,9 +162,7 @@ class _PostItemState extends State<PostItem> {
                   setState(() {
                     _isShowLove = true;
                     _selectedIndex = i;
-//                    _totalLikes = _list.likes.length;
-//                    _list.isLiked = true;
-//                    _isLiked = _list.isLiked;
+
 
                 });
                   Future.delayed(Duration(seconds: 3),(){
@@ -219,68 +211,57 @@ class _PostItemState extends State<PostItem> {
                   children: [
                     Row(
                       children: [
-//                        LikeButton(
-//                          circleColor: CircleColor(start: Color(0xff00ddff), end: Color(0xff0099cc)),
-//                          bubblesColor: BubblesColor(
-//                            dotPrimaryColor: Color(0xff33b5e5),
-//                            dotSecondaryColor: Color(0xff0099cc),
-//                          ),
-//                          likeBuilder: (bool isLiked) {
-//                            return _list.isLiked?Icon(
-//                              Icons.favorite,
-//                              color: BaseColor.red,
-//                            ):Icon(Icons.favorite_border,);
-//                          },
-//                          onTap: onLikeButtonTapped,
-//                          likeCount: _list.likes.length,
-//                          countBuilder: (int count, bool isLiked, String text) {
-//                            var color = _list.isLiked ? Colors.deepPurpleAccent : Colors.grey;
-//                            Widget result;
-//                            if (count == 0) {
-//                              result = Text(
-//                                "0",
-//                                style: TextStyle(color: color),
-//                              );
-//                            } else
-//                              result = Text(
-//                                text,
-//                                style: TextStyle(color: color),
-//                              );
-//                            return result;
-//                          },
-//                        ),
-                        _list.isLiked ? GestureDetector(
-                          child: Icon(Icons.favorite,color: BaseColor.red,),
-                        onTap: (){
-//                          setState(() {
-//                            _list.likes.length -=1;
-//                            _totalLikes = _list.likes.length;
-//                            _list.isLiked = false;
-//                            _isLiked = _list.isLiked;
-//                          });
-                          context.bloc<LikeUnlikeBloc>().add(UnlikeEvent(id: _list.id));
-                          Future.delayed(Duration(milliseconds: 500));
-                          context.bloc<FollowingPostBloc>().add(UpdateFollowingPost());
-
-                        },):
-                        GestureDetector(
-                          child: Icon(Icons.favorite_border),
-                          onTap: (){
-//                            setState(() {
-//                              _list.likes.length +=1;
-//                              _totalLikes = _list.likes.length;
-//                              _list.isLiked = true;
-//                              _isLiked = _list.isLiked;
-//                            });
-
-                            context.bloc<LikeUnlikeBloc>().add(LikeEvent(id: _list.id));
-                            Future.delayed(Duration(milliseconds: 500),(){
-                              context.bloc<FollowingPostBloc>().add(UpdateFollowingPost());
-                            });
-
+                        LikeButton(
+                          circleColor: CircleColor(start: Color(0xff00ddff), end: Color(0xff0099cc)),
+                          bubblesColor: BubblesColor(
+                            dotPrimaryColor: Color(0xff33b5e5),
+                            dotSecondaryColor: Color(0xff0099cc),
+                          ),
+                          likeBuilder: (bool isLiked) {
+                            return _list.isLiked?Icon(
+                              Icons.favorite,
+                              color: BaseColor.red,
+                            ):Icon(Icons.favorite_border,);
+                          },
+                          onTap: onLikeButtonTapped,
+                          likeCount: _list.likes.length,
+                          countBuilder: (int count, bool isLiked, String text) {
+                            var color = _list.isLiked ? Colors.deepPurpleAccent : Colors.grey;
+                            Widget result;
+                            if (count == 0) {
+                              result = Text(
+                                "0 likes",
+                                style: TextStyle(color: color),
+                              );
+                            } else
+                              result = Text(
+                                '$text likes',
+                                style: TextStyle(color: color),
+                              );
+                            return result;
                           },
                         ),
-                        Text('${_list.likes.length} likes'),
+//                        _list.isLiked ? GestureDetector(
+//                          child: Icon(Icons.favorite,color: BaseColor.red,),
+//                        onTap: (){
+//
+//                          context.bloc<LikeUnlikeBloc>().add(UnlikeEvent(id: _list.id));
+//                          Future.delayed(Duration(milliseconds: 500));
+//                          context.bloc<FollowingPostBloc>().add(UpdateFollowingPost());
+//
+//                        },):
+//                        GestureDetector(
+//                          child: Icon(Icons.favorite_border),
+//                          onTap: (){
+//
+//                            context.bloc<LikeUnlikeBloc>().add(LikeEvent(id: _list.id));
+//                            Future.delayed(Duration(milliseconds: 500),(){
+//                              context.bloc<FollowingPostBloc>().add(UpdateFollowingPost());
+//                            });
+//
+//                          },
+//                        ),
+//                        Text('${_list.likes.length} likes'),
                         SizedBox(width: 10,),
                         Icon(Icons.chat_bubble_outline),
                         Text('${_list.comments.length} comments'),

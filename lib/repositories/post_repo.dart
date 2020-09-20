@@ -59,7 +59,7 @@ class PostRepo extends BaseService implements POST{
     final Response response = await request(endpoint: 'post/like',data: FormData.fromMap({
       'postId':id
     }),requestType: RequestType.PUT);
-    print(response.data['status']);
+    print(response.data);
     final LikeUnlikeModel res = LikeUnlikeModel.fromMap(response.data);
     return res;
   }
@@ -84,6 +84,7 @@ class PostRepo extends BaseService implements POST{
   @override
   Future<DetailPostModel> getDetailPost({String id}) async {
     final Response response = await request(endpoint: 'post/detailpost/$id',requestType: RequestType.GET);
+    print(response.data);
     DetailPostModel res = DetailPostModel.fromMap(response.data);
     return res;
   }

@@ -30,12 +30,14 @@ const extraSpace = 70.0;
 class ProfileScreenState extends State<ProfileScreen> {
 
   bool get showLogOutButton => widget.showLogout;
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
     final userDetail = widget.userDetail.detailModel;
     final posts = widget.userDetail.postModel;
     return Scaffold(
+      key: _scaffoldKey,
       body: SafeArea(
         child: DefaultTabController(
           length: 3,
@@ -99,7 +101,7 @@ class ProfileScreenState extends State<ProfileScreen> {
             body: TabBarView(
               physics: NeverScrollableScrollPhysics(),
               children: [
-                ProfilePhotosList(postList: posts,isMe: userDetail.isMe,),
+                ProfilePhotosList(postList: posts,isMe: userDetail.isMe,scaffoldKey: _scaffoldKey,),
                 Center(child: Text('${userDetail.followers.length} followers',style: TextStyle(color: BaseColor.black,fontSize: 12),)),
                 Center(child: Text('${userDetail.following.length} following',style: TextStyle(color: BaseColor.black,fontSize: 12),)),
 
