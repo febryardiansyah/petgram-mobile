@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:petgram_mobile_app/bloc/follow_unfollow_bloc/follow_unfollow_bloc.dart';
 import 'package:petgram_mobile_app/bloc/my_profile_bloc/profile_bloc.dart';
 import 'package:petgram_mobile_app/screens/profile_screen/profile_loading.dart';
 
@@ -20,6 +21,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
   @override
   void initState() {
     super.initState();
+    BlocProvider.of<FollowUnfollowUserBloc>(context);
     BlocProvider.of<ProfileBloc>(context).add(FetchUserProfile(
       id: widget.id
     ));

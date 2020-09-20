@@ -4,6 +4,9 @@ import 'package:petgram_mobile_app/bloc/all_post_bloc/all_post_bloc.dart';
 import 'package:petgram_mobile_app/bloc/create_post_bloc/create_post_bloc.dart';
 import 'package:petgram_mobile_app/bloc/delete_post_bloc/delete_post_bloc.dart';
 import 'package:petgram_mobile_app/bloc/detail_post_bloc/detail_post_bloc.dart';
+import 'package:petgram_mobile_app/bloc/edit_post_bloc/edit_post_bloc.dart';
+import 'package:petgram_mobile_app/bloc/edit_profile_bloc/edit_profile_bloc.dart';
+import 'package:petgram_mobile_app/bloc/follow_unfollow_bloc/follow_unfollow_bloc.dart';
 import 'package:petgram_mobile_app/bloc/following_post_bloc/following_post_bloc.dart';
 import 'package:petgram_mobile_app/bloc/like_unlike_bloc/like_unlike_bloc.dart';
 import 'package:petgram_mobile_app/bloc/my_profile_bloc/profile_bloc.dart';
@@ -14,6 +17,7 @@ import 'package:petgram_mobile_app/constants/base_string.dart';
 import 'package:petgram_mobile_app/helpers/routes.dart';
 import 'package:petgram_mobile_app/repositories/auth_repo.dart';
 import 'package:petgram_mobile_app/repositories/post_repo.dart';
+import 'package:petgram_mobile_app/repositories/user_repo.dart';
 
 import 'bloc/auth_bloc/auth_bloc.dart';
 
@@ -59,6 +63,15 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider<CreatePostBloc>(
           create: (_) => CreatePostBloc(PostRepo()),
+        ),
+        BlocProvider<EditPostBloc>(
+          create: (_) => EditPostBloc(PostRepo()),
+        ),
+        BlocProvider<FollowUnfollowUserBloc>(
+          create: (_) => FollowUnfollowUserBloc(UserRepo()),
+        ),
+        BlocProvider<EditProfileBloc>(
+          create: (_) => EditProfileBloc(UserRepo()),
         ),
       ],
       child: MaterialApp(

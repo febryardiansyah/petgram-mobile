@@ -253,7 +253,7 @@ class _DetailPostScreenState extends State<DetailPostScreen> {
                                   children: [
                                     Text(_data.postedBy.name,style: TextStyle(fontWeight: FontWeight.bold),),
                                     SizedBox(width: 5,),
-                                    Expanded(child: Text(_data.caption))
+                                    Expanded(child: Text(_data.caption ?? ''))
                                   ],
                                 )
                               ],

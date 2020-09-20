@@ -271,7 +271,7 @@ class _PostItemState extends State<PostItem> {
                       children: [
                         Text(_list.postedBy.name,style: TextStyle(fontWeight: FontWeight.bold),),
                         SizedBox(width: 5,),
-                        Text(_list.caption.length >= 30?_list.caption.substring(0,30)+'...':_list.caption)
+                        Text(_list.caption == null ? '':_list.caption.length >= 30?_list.caption.substring(0,30)+'...':_list.caption)
                       ],
                     )
                   ],

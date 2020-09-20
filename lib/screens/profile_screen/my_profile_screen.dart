@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_shimmer/flutter_shimmer.dart';
 import 'package:petgram_mobile_app/bloc/delete_post_bloc/delete_post_bloc.dart';
+import 'package:petgram_mobile_app/bloc/edit_post_bloc/edit_post_bloc.dart';
 import 'package:petgram_mobile_app/bloc/my_profile_bloc/profile_bloc.dart';
 import 'package:petgram_mobile_app/screens/profile_screen/ProfileScreen.dart';
 import 'package:petgram_mobile_app/screens/profile_screen/profile_loading.dart';
@@ -17,6 +18,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
     super.initState();
     BlocProvider.of<ProfileBloc>(context)..add(FetchMyProfile());
     BlocProvider.of<DeletePostBloc>(context);
+    BlocProvider.of<EditPostBloc>(context);
   }
 
   @override

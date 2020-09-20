@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:petgram_mobile_app/bloc/auth_bloc/auth_bloc.dart';
+import 'package:petgram_mobile_app/bloc/follow_unfollow_bloc/follow_unfollow_bloc.dart';
 import 'package:petgram_mobile_app/bloc/following_post_bloc/following_post_bloc.dart';
 import 'package:petgram_mobile_app/bloc/my_profile_bloc/profile_bloc.dart';
 import 'package:petgram_mobile_app/bloc/signin_bloc/sign_in_bloc.dart';
@@ -30,7 +31,8 @@ const extraSpace = 70.0;
 class ProfileScreenState extends State<ProfileScreen> {
 
   bool get showLogOutButton => widget.showLogout;
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+//  GlobalKey<ScaffoldState> get _scaffoldKey  => widget.scaffoldKey;
 
   @override
   Widget build(BuildContext context) {
@@ -49,7 +51,8 @@ class ProfileScreenState extends State<ProfileScreen> {
                   delegate: MyHeaderDelegate(
                     extendedHeight: kToolbarHeight + avatarSize + extraSpace,
                     petname: userDetail.petname,name:userDetail.name,profilePic: userDetail.profilePic,
-                    postList: posts,showLogOutButton:showLogOutButton,isMe: userDetail.isMe
+                    postList: posts,showLogOutButton:showLogOutButton,isMe: userDetail.isMe,isFollowed:userDetail.isFollowed,
+                    userDetail: userDetail
                       ),
                   pinned: true,
                 ),
@@ -119,9 +122,11 @@ class MyHeaderDelegate extends SliverPersistentHeaderDelegate {
   final String name,petname,profilePic;
   final List<PostModel>postList;
   final bool isMe;
+  final bool isFollowed;
+  final DetailModel userDetail;
   bool showLogOutButton;
 
-  MyHeaderDelegate({this.extendedHeight,this.petname,this.name,this.profilePic,this.postList,this.showLogOutButton,this.isMe});
+  MyHeaderDelegate({this.extendedHeight,this.petname,this.name,this.profilePic,this.postList,this.showLogOutButton,this.isMe,this.isFollowed,this.userDetail});
 
   @override
   Widget build(
@@ -170,48 +175,68 @@ class MyHeaderDelegate extends SliverPersistentHeaderDelegate {
                   actions: [
                     Container(
                       width: 200,
-                      child: Stack(
-                        fit: StackFit.expand,
-                        children: [
-                          Positioned(
-                            top: 0,
-                            right: actionsXPosition,
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                !isMe?FlatButton(
-                                  child: Text('Follow'),
-                                  onPressed: (){},
-                                ):FlatButton(
-                                  child: Text('Edit Profile'),
-                                  onPressed: (){},
-                                ),
-                                isMe?IconButton(
-                                  icon: Icon(FontAwesomeIcons.signOutAlt,color: BaseColor.black),
-                                  onPressed: (){
+                      child: Builder(
+                        builder:(context) => BlocListener<FollowUnfollowUserBloc,FollowUnfollowState>(
+                          listener: (context,state){
+                            print('follow unfollow $state');
+                            if(state is FollowUserSuccess || state is UnFollowUserSuccess){
+                              BlocProvider.of<ProfileBloc>(context).add(FetchUserProfile(id: userDetail.id));
+                              BlocProvider.of<FollowingPostBloc>(context).add(UpdateFollowingPost());
+                            }
+                          },
+                          child: Stack(
+                            fit: StackFit.expand,
+                            children: [
+                              Positioned(
+                                top: 0,
+                                right: actionsXPosition,
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    !userDetail.isMe?userDetail.isFollowed?FlatButton(
+                                      child: Text('Unfollow'),
+                                      onPressed: (){
+                                        context.bloc<FollowUnfollowUserBloc>().add(UnFollowUser(id: userDetail.id));
+                                      },
+                                    ):FlatButton(
+                                      child: Text('Follow'),
+                                      onPressed: (){
+                                        context.bloc<FollowUnfollowUserBloc>().add(FollowUser(id: userDetail.id));
+                                      },
+                                    ):FlatButton(
+                                      child: Text('Edit Profile'),
+                                      onPressed: (){
+                                        Navigator.pushNamed(context, '/editProfile',arguments: userDetail);
+                                      },
+                                    ),
+                                    userDetail.isMe?IconButton(
+                                      icon: Icon(FontAwesomeIcons.signOutAlt,color: BaseColor.black),
+                                      onPressed: (){
 
-                                    BlocProvider.of<SignInBloc>(context).add(SignOutBtnPressed());
-                                    showDialog(
-                                        context: context,
-                                        builder: (context){
-                                          print('dialog');
-                                          return AlertDialog(
-                                            content: Text('loading...'),
-                                          );
-                                        }
-                                    );
-                                    Future.delayed(Duration(seconds: 3),(){
-                                      print('after dialog');
+                                        BlocProvider.of<SignInBloc>(context).add(SignOutBtnPressed());
+                                        showDialog(
+                                            context: context,
+                                            builder: (context){
+                                              print('dialog');
+                                              return AlertDialog(
+                                                content: Text('loading...'),
+                                              );
+                                            }
+                                        );
+                                        Future.delayed(Duration(seconds: 3),(){
+                                          print('after dialog');
 //                                      BlocProvider.of<ProfileBloc>(context).add(ResetProfileEvent());
-                                      BlocProvider.of<FollowingPostBloc>(context).add(ResetFollowingPostEvent());
-                                      Navigator.pushNamedAndRemoveUntil(context, '/loginScreen', (route) => false);
-                                    });
-                                  },
-                                ):Center(),
-                              ],
-                            ),
+                                          BlocProvider.of<FollowingPostBloc>(context).add(ResetFollowingPostEvent());
+                                          Navigator.pushNamedAndRemoveUntil(context, '/loginScreen', (route) => false);
+                                        });
+                                      },
+                                    ):Center(),
+                                  ],
+                                ),
+                              ),
+                            ],
                           ),
-                        ],
+                        ),
                       ),
                     ),
                   ],

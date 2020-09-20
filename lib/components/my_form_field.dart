@@ -7,17 +7,22 @@ class MyFormField extends StatefulWidget {
   final Widget prefixIcon, suffixIcon;
   final String hintText;
   final bool obscureText;
+  final String initialValue;
+  final String labelText;
+  final bool autoFocus;
   final TextEditingController textEditingController;
 
-  const MyFormField(
-      {Key key,
-        this.textEditingController,
-      this.keyboardType,
-      this.onFieldSubmitted,
-      this.prefixIcon,
-      this.suffixIcon,
-      this.obscureText = false,
-      this.hintText})
+  const MyFormField({Key key,
+    this.textEditingController,
+    this.keyboardType,
+    this.onFieldSubmitted,
+    this.prefixIcon,
+    this.suffixIcon,
+    this.obscureText = false,
+    this.autoFocus = false,
+    this.initialValue,
+    this.labelText,
+    this.hintText})
       : super(key: key);
 
   @override
@@ -34,9 +39,12 @@ class _MyFormFieldState extends State<MyFormField> {
         keyboardType: widget.keyboardType,
         onFieldSubmitted: widget.onFieldSubmitted,
         obscureText: widget.obscureText,
+        initialValue:widget.initialValue,
+        autofocus: widget.autoFocus,
         decoration: InputDecoration(
           prefixIcon: widget.prefixIcon,
           hintText: widget.hintText,
+          labelText: widget.labelText,
           border: InputBorder.none,
           fillColor: BaseColor.white,
           filled: true,

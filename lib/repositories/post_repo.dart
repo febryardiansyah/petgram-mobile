@@ -20,6 +20,7 @@ abstract class POST{
   Future<bool> deleteComment({String id,String commentId});
   Future<bool> deletePost(String id);
   Future<Response> createPost({File image,String caption});
+  Future<bool> editPost({String id, String caption});
 }
 
 class PostRepo extends BaseService implements POST{
@@ -131,6 +132,15 @@ class PostRepo extends BaseService implements POST{
     print(response.data);
 
     return response;
+  }
+
+  @override
+  Future<bool> editPost({String id, String caption}) async{
+    final Response response = await request(endpoint: 'post/editpost',data:FormData.fromMap({
+      "postId":id,"caption":caption
+    }),requestType: RequestType.PUT );
+    final bool res = response.data['status'];
+    return res;
   }
 
 }
