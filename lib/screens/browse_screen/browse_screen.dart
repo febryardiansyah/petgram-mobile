@@ -55,7 +55,7 @@ class BrowsePostList extends StatelessWidget {
     return Column(
       children: [
         GestureDetector(
-          onTap: (){},
+          onTap: ()=>Navigator.pushNamed(context, '/search'),
           child: Container(
             height: 100.h,
             width: MediaQuery.of(context).size.width,

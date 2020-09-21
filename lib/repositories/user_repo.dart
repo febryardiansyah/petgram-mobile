@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:petgram_mobile_app/models/user_models/search_user_model.dart';
 import 'package:petgram_mobile_app/repositories/edit_profile_repo.dart';
 import 'package:petgram_mobile_app/services/base_service.dart';
 
@@ -12,6 +13,7 @@ abstract class USER{
   Future<bool> editNameProfile({String name});
   Future<bool> editPetNameProfile({String petname});
   Future<bool> editPasswordProfile({String password});
+  Future<SearchUserModel> searchUser({String query});
 }
 
 class UserRepo extends BaseService implements USER{
@@ -72,5 +74,13 @@ class UserRepo extends BaseService implements USER{
       "password":password
     }));
     return status;
+  }
+
+  @override
+  Future<SearchUserModel> searchUser({String query}) async{
+    final Response response = await request(endpoint: 'user/search?user=$query',requestType: RequestType.GET);
+    final SearchUserModel res = SearchUserModel.fromMap(response.data);
+    print(response.data);
+    return res;
   }
 }
