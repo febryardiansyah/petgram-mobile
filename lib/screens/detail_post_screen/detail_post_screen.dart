@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:like_button/like_button.dart';
+import 'package:petgram_mobile_app/bloc/delete_post_bloc/delete_post_bloc.dart';
 import 'package:petgram_mobile_app/bloc/detail_post_bloc/detail_post_bloc.dart';
 import 'package:petgram_mobile_app/bloc/following_post_bloc/following_post_bloc.dart';
 import 'package:petgram_mobile_app/bloc/like_unlike_bloc/like_unlike_bloc.dart';
@@ -95,7 +96,7 @@ class _DetailPostScreenState extends State<DetailPostScreen> {
                   Center(child: Text('${post.createdAt}',style: TextStyle(color: BaseColor.grey2,fontSize: 12),))
                 ],
               ),
-              body: Center(child: Text('Loading...'),),
+              body: Center(child: CircularProgressIndicator(),),
             );
           }
           if(state is DetailPostLoaded){
@@ -158,7 +159,7 @@ class _DetailPostScreenState extends State<DetailPostScreen> {
                                 backgroundColor: BaseColor.black,
                                 builder: (context){
                                   return Container(
-                                    height: MediaQuery.of(context).size.height - 50,
+                                    height: MediaQuery.of(context).size.height,
                                     child: PhotoView(
                                       imageProvider: NetworkImage(_data.imageUrl),
                                     ),
@@ -292,49 +293,59 @@ class _DetailPostScreenState extends State<DetailPostScreen> {
                                     Expanded(child: Text(_data.comments[i].text)),
                                   ],
                                 ),
-                              ):Slidable(
-                                 actionPane: SlidableDrawerActionPane(),
-                                 secondaryActions: <Widget>[
-                                   IconSlideAction(
-                                     caption: 'Delete',
-                                     color: Colors.red,
-                                     icon: Icons.delete,
-                                     onTap: (){
-                                       context.bloc<PostCommentBloc>().add(DeleteCommentEvent(
-                                         id: _data.id,commentId: _data.comments[i].id
-                                       ));
-                                       Future.delayed(Duration(milliseconds: 500),(){
-                                         context.bloc<DetailPostBloc>().add(UpdateDetailPost(id: _data.id));
-                                         context.bloc<FollowingPostBloc>().add(UpdateFollowingPost());
-                                       });
-                                     },
-                                   ),
-                                 ],
-                                 child: Padding(
-                                   padding: EdgeInsets.symmetric(vertical: 10.0),
-                                   child: Row(
-                                     children: [
-                                       Container(
-                                         width: 60.w,
-                                         height: 60.h,
-                                         decoration: BoxDecoration(
-                                             shape: BoxShape.circle,
-                                             image: DecorationImage(
-                                                 image: NetworkImage(_data.comments[i].postedBy.profilePic),
-                                                 fit: BoxFit.cover
-                                             )
+                              ):BlocListener<PostCommentBloc,PostCommentState>(
+                                listener: (context,state){
+                                  print('delete comment $state');
+                                  if(state is DeleteCommentSuccess){
+                                    context.bloc<DetailPostBloc>().add(UpdateDetailPost(id: _data.id));
+                                    context.bloc<FollowingPostBloc>().add(UpdateFollowingPost());
+                                  }
+                                  if(state is PostCommentLoading){
+                                    Scaffold.of(context)..hideCurrentSnackBar()..showSnackBar(SnackBar(
+                                      content: Text('Deleting comment...'),
+                                    ));
+                                  }
+                                },
+                                child: Slidable(
+                                   actionPane: SlidableDrawerActionPane(),
+                                   secondaryActions: <Widget>[
+                                     IconSlideAction(
+                                       caption: 'Delete',
+                                       color: Colors.red,
+                                       icon: Icons.delete,
+                                       onTap: (){
+                                         context.bloc<PostCommentBloc>().add(DeleteCommentEvent(
+                                           id: _data.id,commentId: _data.comments[i].id
+                                         ));
+                                       },
+                                     ),
+                                   ],
+                                   child: Padding(
+                                     padding: EdgeInsets.symmetric(vertical: 10.0),
+                                     child: Row(
+                                       children: [
+                                         Container(
+                                           width: 60.w,
+                                           height: 60.h,
+                                           decoration: BoxDecoration(
+                                               shape: BoxShape.circle,
+                                               image: DecorationImage(
+                                                   image: NetworkImage(_data.comments[i].postedBy.profilePic),
+                                                   fit: BoxFit.cover
+                                               )
+                                           ),
                                          ),
-                                       ),
-                                       SizedBox(width: 10,),
-                                       Text(_data.comments[i].postedBy.name,style: TextStyle(fontWeight: FontWeight.bold),),
-                                       SizedBox(width: 10,),
-                                       Expanded(child: Text(_data.comments[i].text)),
-                                       Spacer(),
-                                       Icon(Icons.arrow_back_ios)
-                                     ],
+                                         SizedBox(width: 10,),
+                                         Text(_data.comments[i].postedBy.name,style: TextStyle(fontWeight: FontWeight.bold),),
+                                         SizedBox(width: 10,),
+                                         Expanded(child: Text(_data.comments[i].text)),
+                                         Spacer(),
+                                         Icon(Icons.arrow_back_ios)
+                                       ],
+                                     ),
                                    ),
                                  ),
-                               );
+                              );
                             },
                           ),
                         )

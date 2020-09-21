@@ -16,6 +16,7 @@ class FollowUnfollowUserBloc extends Bloc<FollowUnfollowEvent, FollowUnfollowSta
     FollowUnfollowEvent event,
   ) async* {
     if(event is FollowUser){
+      yield FollowUnfollowLoading();
       try{
         final bool status = await _user.followUser(event.id);
         if(status){
@@ -28,6 +29,7 @@ class FollowUnfollowUserBloc extends Bloc<FollowUnfollowEvent, FollowUnfollowSta
       }
     }
     if(event is UnFollowUser){
+      yield FollowUnfollowLoading();
       try{
         final bool status = await _user.unFollowUser(event.id);
         if(status){

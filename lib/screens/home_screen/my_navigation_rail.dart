@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:petgram_mobile_app/bloc/my_profile_bloc/profile_bloc.dart';
 import 'package:petgram_mobile_app/constants/base_color.dart';
 import 'package:petgram_mobile_app/helpers/shared_preferences/profile_pref.dart';
 import 'package:petgram_mobile_app/screens/browse_screen/browse_screen.dart';
@@ -21,17 +23,21 @@ class _MyNavigationRailState extends State<MyNavigationRail> {
     BrowseScreen(),
     BrowseScreen(),
   ];
-  _setPic()async{
+
+  _setPic() async {
     String savedPic = await ProfilePreference.getProfile();
     setState(() {
       _profilePic = savedPic;
     });
   }
+
   @override
   void initState() {
     super.initState();
+    BlocProvider.of<ProfileBloc>(context).add(FetchMyProfile());
     _setPic();
   }
+
   @override
   Widget build(BuildContext context) {
     ScreenUtil.init(context);
@@ -41,22 +47,50 @@ class _MyNavigationRailState extends State<MyNavigationRail> {
           children: <Widget>[
             NavigationRail(
               trailing: Padding(
-                padding: EdgeInsets.only(top: MediaQuery.of(context).size.width /2),
+                padding:
+                    EdgeInsets.only(top: MediaQuery.of(context).size.width / 2),
                 child: GestureDetector(
-                  onTap: (){},
-                  child: Icon(Icons.settings,color: BaseColor.white,),
+                  onTap: () {},
+                  child: Icon(
+                    Icons.settings,
+                    color: BaseColor.white,
+                  ),
                 ),
               ),
-              leading: GestureDetector(onTap: () {
-                Navigator.pushNamed(context, '/myProfile');
-              }, child: Container(
-                margin: EdgeInsets.all(8),
-                width: 30,height: 50,decoration: BoxDecoration(
-                color: BaseColor.grey1,
-                shape: BoxShape.circle,
-                image: DecorationImage(image: NetworkImage(_profilePic),fit: BoxFit.cover)
-              ),
-              )),
+              leading: GestureDetector(
+                  onTap: () {
+                    Navigator.pushNamed(context, '/myProfile');
+                  },
+                  child: BlocBuilder<ProfileBloc,ProfileState>(
+                    builder:(context,state) {
+                      if(state is MyProfileLoaded){
+                        return Align(
+                          alignment: Alignment.center,
+                          child: Container(
+                            margin: EdgeInsets.all(8),
+                            width: 30,
+                            height: 30,
+                            decoration: BoxDecoration(
+                                color: BaseColor.grey1,
+                                shape: BoxShape.circle,
+                                image: DecorationImage(
+                                    image: NetworkImage(state.userProfileModel.user.detailModel.profilePic),
+                                    fit: BoxFit.cover)),
+                          ),
+                        );
+                      }
+                        return Container(
+                          margin: EdgeInsets.all(8),
+                          width: 30,
+                          height: 50,
+                          decoration: BoxDecoration(
+                              color: BaseColor.grey1,
+                              shape: BoxShape.circle,
+                              ),
+                        );
+
+                    },
+                  )),
               selectedIndex: _selectedIndex,
               onDestinationSelected: (int index) {
                 setState(() {
@@ -90,7 +124,7 @@ class _MyNavigationRailState extends State<MyNavigationRail> {
             Expanded(
               child: Center(
                 child: IndexedStack(
-                 index: _selectedIndex,
+                  index: _selectedIndex,
                   children: _childern,
                 ),
               ),

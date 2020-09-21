@@ -180,8 +180,14 @@ class MyHeaderDelegate extends SliverPersistentHeaderDelegate {
                           listener: (context,state){
                             print('follow unfollow $state');
                             if(state is FollowUserSuccess || state is UnFollowUserSuccess){
+                              Navigator.pop(context);
                               BlocProvider.of<ProfileBloc>(context).add(FetchUserProfile(id: userDetail.id));
                               BlocProvider.of<FollowingPostBloc>(context).add(UpdateFollowingPost());
+                            }
+                            if(state is FollowUnfollowLoading){
+                              showDialog(context: context,builder: (context)=>AlertDialog(
+                                title: Text('loading..'),
+                              ));
                             }
                           },
                           child: Stack(

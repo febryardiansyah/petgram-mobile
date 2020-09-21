@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:petgram_mobile_app/bloc/detail_post_bloc/detail_post_bloc.dart';
 import 'package:petgram_mobile_app/bloc/following_post_bloc/following_post_bloc.dart';
+import 'package:petgram_mobile_app/bloc/my_profile_bloc/profile_bloc.dart';
 import 'package:petgram_mobile_app/bloc/postComment_bloc/post_comment_bloc.dart';
 import 'package:petgram_mobile_app/constants/base_color.dart';
 import 'package:petgram_mobile_app/helpers/shared_preferences/profile_pref.dart';
@@ -22,22 +23,39 @@ class CommentForm extends StatelessWidget {
     ScreenUtil.init(context);
 //    final size = MediaQuery.of(context).size;
 
-    return BlocBuilder<PostCommentBloc,PostCommentState>(
+    return BlocConsumer<PostCommentBloc,PostCommentState>(
+      listener: (context,state){
+        if(state is PostCommentSuccess){
+          BlocProvider.of<DetailPostBloc>(context).add(UpdateDetailPost(id: id));
+          BlocProvider.of<FollowingPostBloc>(context).add(UpdateFollowingPost());
+        }
+        if(state is PostCommentFailure){
+          Scaffold.of(context)..hideCurrentSnackBar()
+              ..showSnackBar(SnackBar(content: Text(state.msg),));
+        }
+      },
       builder:(context,state) => Padding(
         padding: const EdgeInsets.all(8.0),
         child: Row(
           children: [
-            Container(
-              width: 100.w,
-              height: 100.h,
-              decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: BaseColor.grey3,
-                  image: DecorationImage(
-                      image: NetworkImage(image),
-                      fit: BoxFit.cover
-                  )
-              ),
+            BlocBuilder<ProfileBloc,ProfileState>(
+              builder:(context,state) {
+                if(state is MyProfileLoaded){
+                  return Container(
+                    width: 100.w,
+                    height: 100.h,
+                    decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: BaseColor.grey3,
+                        image: DecorationImage(
+                            image: NetworkImage(state.userProfileModel.user.detailModel.profilePic),
+                            fit: BoxFit.cover
+                        )
+                    ),
+                  );
+                }
+                return Container();
+              }
             ),
             SizedBox(width: 10,),
             Container(
@@ -68,10 +86,6 @@ class CommentForm extends StatelessWidget {
                 context.bloc<PostCommentBloc>().add(CommentEvent(
                   id: id,text: _textCtrl.text,
                 ));
-                Future.delayed(Duration(milliseconds: 500),(){
-                  BlocProvider.of<DetailPostBloc>(context).add(UpdateDetailPost(id: id));
-                  BlocProvider.of<FollowingPostBloc>(context).add(UpdateFollowingPost());
-                });
                 FocusScope.of(context).requestFocus(FocusNode());
                 _textCtrl.clear();
               },

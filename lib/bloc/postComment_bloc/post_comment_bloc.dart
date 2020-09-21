@@ -17,6 +17,7 @@ class PostCommentBloc extends Bloc<PostCommentEvent, PostCommentState> {
     PostCommentEvent event,
   ) async* {
     if(event is CommentEvent){
+      yield PostCommentLoading();
       try{
         final Response response = await _post.postComment(id: event.id,text: event.text);
         final bool status = response.data['status'];
@@ -31,15 +32,16 @@ class PostCommentBloc extends Bloc<PostCommentEvent, PostCommentState> {
     }
 
     if(event is DeleteCommentEvent){
+      yield PostCommentLoading();
       try{
         final bool status = await _post.deleteComment(id: event.id,commentId: event.commentId);
         if(status){
-          yield PostCommentSuccess();
+          yield DeleteCommentSuccess();
         }else{
-          yield PostCommentFailure(msg: status.toString());
+          yield DeleteCommentFailure(msg: 'Delete comment Failure !!');
         }
       }catch(e){
-        yield PostCommentFailure(msg: e.toString());
+        yield DeleteCommentFailure(msg: e.toString());
       }
     }
   }

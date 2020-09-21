@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_shimmer/flutter_shimmer.dart';
 import 'package:like_button/like_button.dart';
 import 'package:petgram_mobile_app/bloc/following_post_bloc/following_post_bloc.dart';
 import 'package:petgram_mobile_app/bloc/like_unlike_bloc/like_unlike_bloc.dart';
@@ -13,6 +14,10 @@ import 'package:petgram_mobile_app/constants/base_string.dart';
 import 'package:petgram_mobile_app/helpers/shared_preferences/profile_pref.dart';
 import 'package:petgram_mobile_app/models/post_models/following_post_model.dart';
 import 'package:petgram_mobile_app/repositories/post_repo.dart';
+import 'package:shimmer/shimmer.dart';
+
+import 'following_post_shimmer.dart';
+
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -39,14 +44,14 @@ class _HomeScreenState extends State<HomeScreen> {
             if(state is FollowingPostFailure){
               Scaffold.of(context)..hideCurrentSnackBar()
                   ..showSnackBar(SnackBar(
-                    content: Text('no internet'),
+                    content: Text(state.msg),
                   ));
             }
           },
           builder: (context,state){
             print('builder <===> $state');
             if(state is FollowingPostFailure){
-              return Text(state.msg);
+              return FollowingPostShimmer();
             }
             if (state is FollowingPostLoaded) {
               final data = state.data;
@@ -58,9 +63,7 @@ class _HomeScreenState extends State<HomeScreen> {
               return PostItem(data: data,);
             }
             if(state is FollowingPostLoading){
-              return Center(
-                child: Text('Loading'),
-              );
+              return FollowingPostShimmer();
             }
             return Container();
           },
@@ -81,10 +84,8 @@ class PostItem extends StatefulWidget {
 class _PostItemState extends State<PostItem> {
 
   bool _isShowLove = false;
-  bool _isLiked = false;
   int _selectedIndex = 0;
   List _loveList = [];
-  int _totalLikes = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -98,9 +99,6 @@ class _PostItemState extends State<PostItem> {
       itemBuilder: (context,i){
 
         final _list = widget.data.postModel[i];
-
-//          _isLiked = _list.isLiked;
-//          _totalLikes = _list.likes.length;
 
         _loveList.insertAll(i, [FlareActor('assets/flares/love_heart.flr',animation: _isShowLove?'Like heart':'null',fit: BoxFit.contain,)]);
 
@@ -241,27 +239,6 @@ class _PostItemState extends State<PostItem> {
                             return result;
                           },
                         ),
-//                        _list.isLiked ? GestureDetector(
-//                          child: Icon(Icons.favorite,color: BaseColor.red,),
-//                        onTap: (){
-//
-//                          context.bloc<LikeUnlikeBloc>().add(UnlikeEvent(id: _list.id));
-//                          Future.delayed(Duration(milliseconds: 500));
-//                          context.bloc<FollowingPostBloc>().add(UpdateFollowingPost());
-//
-//                        },):
-//                        GestureDetector(
-//                          child: Icon(Icons.favorite_border),
-//                          onTap: (){
-//
-//                            context.bloc<LikeUnlikeBloc>().add(LikeEvent(id: _list.id));
-//                            Future.delayed(Duration(milliseconds: 500),(){
-//                              context.bloc<FollowingPostBloc>().add(UpdateFollowingPost());
-//                            });
-//
-//                          },
-//                        ),
-//                        Text('${_list.likes.length} likes'),
                         SizedBox(width: 10,),
                         Icon(Icons.chat_bubble_outline),
                         Text('${_list.comments.length} comments'),

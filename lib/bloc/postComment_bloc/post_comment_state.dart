@@ -7,7 +7,14 @@ abstract class PostCommentState extends Equatable {
 }
 
 class PostCommentInitial extends PostCommentState {}
+class PostCommentLoading extends PostCommentState {}
 class PostCommentSuccess extends PostCommentState {}
+class DeleteCommentSuccess extends PostCommentState {}
+class DeleteCommentFailure extends PostCommentState {
+  final String msg;
+
+  DeleteCommentFailure({this.msg});
+}
 class PostCommentFailure extends PostCommentState {
   final String msg;
 

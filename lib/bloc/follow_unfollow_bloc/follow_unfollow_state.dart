@@ -7,6 +7,7 @@ abstract class FollowUnfollowState extends Equatable {
 }
 
 class FollowUnfollowInitial extends FollowUnfollowState {}
+class FollowUnfollowLoading extends FollowUnfollowState {}
 class FollowUserSuccess extends FollowUnfollowState {}
 class UnFollowUserSuccess extends FollowUnfollowState {}
 class FollowUserFailure extends FollowUnfollowState {
