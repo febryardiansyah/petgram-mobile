@@ -12,6 +12,7 @@ import 'package:petgram_mobile_app/bloc/like_unlike_bloc/like_unlike_bloc.dart';
 import 'package:petgram_mobile_app/bloc/my_profile_bloc/profile_bloc.dart';
 import 'package:petgram_mobile_app/bloc/postComment_bloc/post_comment_bloc.dart';
 import 'package:petgram_mobile_app/bloc/register_bloc/register_bloc.dart';
+import 'package:petgram_mobile_app/bloc/reset_password_bloc/reset_password_bloc.dart';
 import 'package:petgram_mobile_app/bloc/search_user_bloc/search_user_bloc.dart';
 import 'package:petgram_mobile_app/bloc/signin_bloc/sign_in_bloc.dart';
 import 'package:petgram_mobile_app/constants/base_string.dart';
@@ -76,6 +77,9 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider<SearchUserBloc>(
           create: (_) => SearchUserBloc(UserRepo()),
+        ),
+        BlocProvider<ResetPasswordBloc>(
+          create: (_) => ResetPasswordBloc(UserRepo()),
         ),
       ],
       child: MaterialApp(

@@ -14,6 +14,7 @@ abstract class USER{
   Future<bool> editPetNameProfile({String petname});
   Future<bool> editPasswordProfile({String password});
   Future<SearchUserModel> searchUser({String query});
+  Future<bool> resetPassword({String email});
 }
 
 class UserRepo extends BaseService implements USER{
@@ -82,5 +83,15 @@ class UserRepo extends BaseService implements USER{
     final SearchUserModel res = SearchUserModel.fromMap(response.data);
     print(response.data);
     return res;
+  }
+
+  @override
+  Future<bool> resetPassword({String email}) async {
+    final Response response = await request(endpoint: 'user/resetpassword',requestType: RequestType.PUT,data: FormData.fromMap({
+      "email":email
+    }));
+    final bool status = response.data['status'];
+    print(response.data);
+    return status;
   }
 }

@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
+import 'package:petgram_mobile_app/bloc/reset_password_bloc/reset_password_bloc.dart';
 import 'package:petgram_mobile_app/bloc/signin_bloc/sign_in_bloc.dart';
 import 'package:petgram_mobile_app/components/confirm_button.dart';
 import 'package:petgram_mobile_app/components/my_form_field.dart';
@@ -23,10 +24,14 @@ class _LoginScreenState extends State<LoginScreen> {
   TextEditingController _email = TextEditingController();
   TextEditingController _password = TextEditingController();
 
+  TextEditingController _resetPasswordEmail = TextEditingController();
+  bool _isLoading = false;
+
   @override
   void initState() {
     super.initState();
     BlocProvider.of<SignInBloc>(context);
+    BlocProvider.of<ResetPasswordBloc>(context);
   }
 
   @override
@@ -71,9 +76,6 @@ class _LoginScreenState extends State<LoginScreen> {
           }
         },
         builder:(context,state) {
-//          if(state is SignInSuccess){
-//            return MyNavigationRail();
-//          }
           return Stack(
           children: [
             Container(
@@ -161,7 +163,75 @@ class _LoginScreenState extends State<LoginScreen> {
                           },
                         ),
                         Spacer(),
-                        Text('Forgot Password'),
+                        BlocListener<ResetPasswordBloc,ResetPasswordState>(
+                          listener: (context,state){
+                            if(state is ResetPasswordLoading){
+                              Navigator.pop(context);
+                              _isLoading = true;
+                              showCupertinoDialog(context: context, builder: (context) => AlertDialog(
+                                content: Text('Loading..'),
+                              ));
+                            }
+                            if(state is ResetPasswordSuccess){
+                              print(state.msg);
+                              _resetPasswordEmail.clear();
+                              _isLoading = false;
+                              Navigator.pop(context);
+                              AwesomeDialog(
+                                context: context,
+                                dialogType: DialogType.SUCCES,
+                                animType: AnimType.BOTTOMSLIDE,
+                                title: 'Success',
+                                desc: state.msg,
+                                btnCancelOnPress: () {},
+                              )..show();
+                            }
+                            if(state is ResetPasswordFailure){
+                              print(state.msg);
+                              _resetPasswordEmail.clear();
+                              _isLoading = false;
+                              Navigator.pop(context);
+                              AwesomeDialog(
+                                context: context,
+                                dialogType: DialogType.ERROR,
+                                animType: AnimType.BOTTOMSLIDE,
+                                title: 'Failure',
+                                desc: state.msg,
+                                btnCancelOnPress: () {},
+                              )..show();
+                            }
+                          },
+                          child: GestureDetector(
+                            child: Text('Forgot Password'),
+                            onTap: (){
+                              showCupertinoDialog(context: context, builder: (context)=>AlertDialog(
+                                title: Text('Reset Password'),
+                                content: MyFormField(
+                                  keyboardType: TextInputType.emailAddress,
+                                  textEditingController: _resetPasswordEmail,
+                                  hintText: 'Enter your email',
+                                  prefixIcon: Icon(Icons.email),
+                                ),
+                                actions: [
+                                  FlatButton(
+                                    child: Text('Close'),
+                                    onPressed: () => Navigator.pop(context),
+                                    color: BaseColor.red,
+                                  ),
+                                  FlatButton(
+                                    child: _isLoading ? CircularProgressIndicator():Text('Send'),
+                                    onPressed: () {
+                                      context.bloc<ResetPasswordBloc>().add(DoResetPassword(
+                                        email: _resetPasswordEmail.text
+                                      ));
+                                    },
+                                    color: BaseColor.purple2,
+                                  )
+                                ],
+                              ));
+                            },
+                          ),
+                        ),
                       ],
                     ),
                     SizedBox(

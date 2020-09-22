@@ -11,7 +11,7 @@ abstract class Auth {
 
   Future<void> deleteToken();
 
-  Future<List<String>> register(
+  Future<Response> register(
       {String name, String password, String email, String petname});
 }
 
@@ -26,28 +26,16 @@ class AuthRepository extends BaseService implements Auth {
   }
 
   @override
-  Future<List<String>> register(
+  Future<Response> register(
       {String name, String password, String email, String petname}) async {
-    List<String> _list = [];
-    try {
-      Response response = await dio().post('user/register',
-          data: FormData.fromMap({
-            'email': email,
-            'password': password,
-            'name': name,
-            'petname': petname,
-          }));
-      final message = response.data['message'].toString();
-      final statusCode = response.statusCode.toString();
-      _list.addAll([message, statusCode]);
-      print(_list);
-      return _list;
-    } on DioError catch (e) {
-      final message = e.response.data['message'].toString();
-      final statusCode = e.response.statusCode.toString();
-      _list.addAll([message, statusCode]);
-      return _list;
-    }
+
+      final Response response = await request(endpoint:'user/register',data: FormData.fromMap({
+        'email': email,
+        'password': password,
+        'name': name,
+        'petname': petname,
+      }),requestType: RequestType.POST);
+      return response;
   }
 
   @override

@@ -300,7 +300,7 @@ class _DetailPostScreenState extends State<DetailPostScreen> {
                                     context.bloc<DetailPostBloc>().add(UpdateDetailPost(id: _data.id));
                                     context.bloc<FollowingPostBloc>().add(UpdateFollowingPost());
                                   }
-                                  if(state is PostCommentLoading){
+                                  if(state is DeleteCommentLoading){
                                     Scaffold.of(context)..hideCurrentSnackBar()..showSnackBar(SnackBar(
                                       content: Text('Deleting comment...'),
                                     ));

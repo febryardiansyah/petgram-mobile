@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
+import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
 import 'package:petgram_mobile_app/repositories/auth_repo.dart';
 
@@ -26,15 +27,17 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
         yield RegisterInitial();
       }
       try {
-        final List<String> response = await _auth.register(
+        final Response response = await _auth.register(
             name: event.name,
             email: event.email,
             password: event.password,
             petname: event.petname);
-        if (response[1] == 200.toString()) {
-          yield RegisterSuccess(msg: response[0]);
+        final bool status = response.data['status'];
+        final String msg = response.data['message'];
+        if (status) {
+          yield RegisterSuccess(msg: msg);
         } else {
-          yield RegisterFailure(msg: response[0]);
+          yield RegisterFailure(msg: msg);
         }
       } catch (e) {
         yield RegisterFailure(msg: e.toString());

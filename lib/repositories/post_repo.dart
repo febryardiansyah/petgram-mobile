@@ -14,7 +14,7 @@ abstract class POST{
   Future<UserProfileModel> getUserProfile(String id);
   Future<LikeUnlikeModel> likePost(String id);
   Future<Response> unlikePost(String id);
-  Future<AllPostModel> getAllPost();
+  Future<AllPostModel> getAllPost({int page});
   Future<DetailPostModel> getDetailPost({String id});
   Future<Response> postComment({String id,String text});
   Future<bool> deleteComment({String id,String commentId});
@@ -27,7 +27,7 @@ class PostRepo extends BaseService implements POST{
 
   @override
   Future<FollowingPostModel> getFollowingPost()async {
-    Response response = await request(endpoint:'post/followingpost',requestType: RequestType.GET );
+    Response response = await request(endpoint:'post/followingpost/0',requestType: RequestType.GET );
     if(response.data['message'] == 'no post'){
       return null;
     }
@@ -75,8 +75,8 @@ class PostRepo extends BaseService implements POST{
   }
 
   @override
-  Future<AllPostModel> getAllPost() async{
-    final Response response = await request(endpoint: 'post/allpost',requestType: RequestType.GET);
+  Future<AllPostModel> getAllPost({int page}) async{
+    final Response response = await request(endpoint: 'post/allpost/$page',requestType: RequestType.GET);
     print(response.data);
     final AllPostModel res = AllPostModel.fromMap(response.data);
     return res;

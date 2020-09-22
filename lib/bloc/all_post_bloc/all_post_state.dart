@@ -9,16 +9,20 @@ abstract class AllPostState extends Equatable {
 class AllPostInitial extends AllPostState {}
 class AllPostLoading extends AllPostState {}
 class AllPostLoaded extends AllPostState {
-  final AllPostModel allPostModel;
+  final List<PostModel> allPost;
+  bool hasReachedMax;
+  int page = 0;
 
-  AllPostLoaded({this.allPostModel});
-  AllPostLoaded copyWith({AllPostModel allPostModel}){
+  AllPostLoaded({this.hasReachedMax,this.page,this.allPost});
+
+  AllPostLoaded copyWith({bool hasReachedMax,List<PostModel> allPost}){
     return AllPostLoaded(
-      allPostModel: allPostModel ?? this.allPostModel
+      allPost: allPost ?? this.allPost,
+      hasReachedMax: hasReachedMax ?? this.hasReachedMax
     );
   }
   @override
-  List<Object> get props => [allPostModel];
+  List<Object> get props => [allPost,hasReachedMax,page];
 }
 class AllPostFailure extends AllPostState{
   final String msg;

@@ -10,6 +10,7 @@ class PostCommentInitial extends PostCommentState {}
 class PostCommentLoading extends PostCommentState {}
 class PostCommentSuccess extends PostCommentState {}
 class DeleteCommentSuccess extends PostCommentState {}
+class DeleteCommentLoading extends PostCommentState {}
 class DeleteCommentFailure extends PostCommentState {
   final String msg;
 

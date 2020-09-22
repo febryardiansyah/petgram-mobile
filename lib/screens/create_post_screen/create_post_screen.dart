@@ -22,9 +22,16 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
   bool _isShowClear = false;
   final _picker = ImagePicker();
 
-  Future<void> getImage()async{
+  Future<void> getImageFromCamera()async{
+    final _pickedImage = await _picker.getImage(source: ImageSource.camera);
+    setState(() {
+      _image = File(_pickedImage.path);
+      _isShowClear = true;
+    });
+  }
+
+  Future<void> getImageFromGallery()async{
     final _pickedImage = await _picker.getImage(source: ImageSource.gallery);
-    print(_pickedImage.path);
     setState(() {
       _image = File(_pickedImage.path);
       _isShowClear = true;
@@ -96,7 +103,31 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                 children: [
                   GestureDetector(
                     onTap: (){
-                      getImage();
+                      showModalBottomSheet(context: context,
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                          builder: (context)=>Container(
+                        height: 130,
+                        child: Column(
+                          children: [
+                            ListTile(
+                              leading: Icon(Icons.camera_alt),
+                              title: Text('From Camera'),
+                              onTap: (){
+                                Navigator.pop(context);
+                                getImageFromCamera();
+                              },
+                            ),
+                            ListTile(
+                              leading: Icon(Icons.photo_library),
+                              title: Text('From Gallery'),
+                              onTap: (){
+                                Navigator.pop(context);
+                                getImageFromGallery();
+                              },
+                            ),
+                          ],
+                        ),
+                      ));
                     },
                     child: Container(
                       height: 200,

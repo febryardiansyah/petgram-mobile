@@ -32,7 +32,7 @@ class PostCommentBloc extends Bloc<PostCommentEvent, PostCommentState> {
     }
 
     if(event is DeleteCommentEvent){
-      yield PostCommentLoading();
+      yield DeleteCommentLoading();
       try{
         final bool status = await _post.deleteComment(id: event.id,commentId: event.commentId);
         if(status){

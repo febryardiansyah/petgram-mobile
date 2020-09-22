@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
@@ -14,11 +17,13 @@ class BrowseScreen extends StatefulWidget {
 
 class _BrowseScreenState extends State<BrowseScreen> {
 
+  Completer<void> _refreshCompleter;
+
   @override
   void initState() {
     super.initState();
+    _refreshCompleter = Completer<void>();
     BlocProvider.of<AllPostBloc>(context).add(FetchAllPostEvent());
-
   }
 
   @override
@@ -26,10 +31,16 @@ class _BrowseScreenState extends State<BrowseScreen> {
     return MyCustomView(
       title: 'Browse',
       subTitle: Text('Browse',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 40),),
-      body: BlocBuilder<AllPostBloc,AllPostState>(
+      body: BlocConsumer<AllPostBloc,AllPostState>(
+        listener: (context,state){
+          if(state is AllPostLoaded){
+            _refreshCompleter?.complete();
+            _refreshCompleter = Completer();
+          }
+        },
         builder: (context,state){
           if(state is AllPostLoaded){
-            return BrowsePostList(postList: state.allPostModel.allPost,);
+            return BrowsePostList(postList: state.allPost,refreshCompleter: _refreshCompleter,state: state,);
           }else if(state is AllPostFailure){
             return Text(state.msg);
           }else if(state is AllPostLoading){
@@ -42,13 +53,34 @@ class _BrowseScreenState extends State<BrowseScreen> {
   }
 }
 
-class BrowsePostList extends StatelessWidget {
+class BrowsePostList extends StatefulWidget {
 
   final List<PostModel>postList;
   final PostModel post;
+  final AllPostLoaded state;
+  Completer<void> refreshCompleter;
 
-  BrowsePostList({this.postList,this.post});
+  BrowsePostList({this.postList,this.post,this.refreshCompleter,this.state});
 
+  @override
+  _BrowsePostListState createState() => _BrowsePostListState();
+}
+
+class _BrowsePostListState extends State<BrowsePostList> {
+
+  ScrollController _scrollController = ScrollController();
+
+  AllPostLoaded get state => widget.state;
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(() {
+      if(_scrollController.position.pixels == _scrollController.position.maxScrollExtent){
+        BlocProvider.of<AllPostBloc>(context).add(FetchAllPostEvent());
+      }
+    });
+  }
   @override
   Widget build(BuildContext context) {
     ScreenUtil.init(context);
@@ -77,39 +109,59 @@ class BrowsePostList extends StatelessWidget {
         ),
         SizedBox(height: 20,),
         Expanded(
-          child: StaggeredGridView.countBuilder(
-            crossAxisCount: 4,
-            itemCount: postList.length,
-            shrinkWrap: true,
-            itemBuilder: (BuildContext context, int index) => GestureDetector(
-              onTap: (){
-                Navigator.pushNamed(context, '/detailPost',arguments: postList[index]);
-              },
-              child: Container(
-                  decoration: BoxDecoration(
-                    image: DecorationImage(
-                      image: NetworkImage(postList[index].imageUrl),
-                      fit: BoxFit.cover
-                    )
-                  ),
+          child: RefreshIndicator(
+            onRefresh: (){
+              BlocProvider.of<AllPostBloc>(context).add(UpdateAllPost());
+            return widget.refreshCompleter.future;
+            },
+            child: StaggeredGridView.countBuilder(
+              controller: _scrollController,
+              crossAxisCount: 4,
+              itemCount: state.hasReachedMax ?widget.postList.length:widget.postList.length+1,
+              shrinkWrap: true,
+              itemBuilder: (BuildContext context, int index) =>
+                  index >= state.allPost.length?Container(
+                    alignment: Alignment.center,
+                    child: SizedBox(
+                      width: 33,height: 33,
+                      child: CircularProgressIndicator(),
+                    ),
+                  ):GestureDetector(
+                onTap: (){
+                  Navigator.pushNamed(context, '/detailPost',arguments: widget.postList[index]);
+                },
+                child: Container(
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                        image: NetworkImage(widget.postList[index].imageUrl),
+                        fit: BoxFit.cover
+                      )
+                    ),
 
+                ),
               ),
+              staggeredTileBuilder: (int index) => StaggeredTile.count(2, index.isEven ? 2 : 4),
+              mainAxisSpacing: 0.0,
+              crossAxisSpacing: 0.0,
             ),
-            staggeredTileBuilder: (int index) =>
-            StaggeredTile.count(2, index.isEven ? 3 : 1),
-            mainAxisSpacing: 4.0,
-            crossAxisSpacing: 4.0,
           ),
         )
-//        GridView.builder(
-//          itemCount: posts.length,
-//          shrinkWrap: true,
-//          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-//            crossAxisCount: 3,crossAxisSpacing: 0,mainAxisSpacing: 0
-//          ),
-//          itemBuilder: (context,i){
-//            return Image.network(posts[i].imageUrl);
+//        RefreshIndicator(
+//          onRefresh: (){
+//            BlocProvider.of<AllPostBloc>(context).add(UpdateAllPost());
+//            return widget.refreshCompleter.future;
 //          },
+//          child: GridView.builder(
+//            itemCount: widget.postList.length,
+//            physics: BouncingScrollPhysics(),
+//            shrinkWrap: true,
+//            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+//              crossAxisCount: 3,crossAxisSpacing: 0,mainAxisSpacing: 0
+//            ),
+//            itemBuilder: (context,i){
+//              return Image.network(widget.postList[i].imageUrl,fit: BoxFit.cover,);
+//            },
+//          ),
 //        )
       ],
     );
