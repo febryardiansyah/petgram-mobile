@@ -9,19 +9,20 @@ abstract class FollowingPostState extends Equatable {
 class FollowingPostInitial extends FollowingPostState {}
 class FollowingPostLoading extends FollowingPostState {}
 class FollowingPostLoaded extends FollowingPostState {
-  final FollowingPostModel data;
-  bool isLiked;
+  final List<PostModel> data;
+  bool hasReachedMax;
+  int page;
 
-  FollowingPostLoaded({this.data,this.isLiked});
-  FollowingPostLoaded copyWith({FollowingPostModel data, bool isLiked}){
+  FollowingPostLoaded({this.data,this.hasReachedMax,this.page});
+  FollowingPostLoaded copyWith({List<PostModel> data, bool hasReachedMax}){
     return FollowingPostLoaded(
-      data: this.data ?? data,
-      isLiked: this.isLiked ?? isLiked,
+      data: data ?? this.data,
+      hasReachedMax: hasReachedMax ?? this.hasReachedMax,
     );
   }
 
   @override
-  List<Object> get props => [data,isLiked];
+  List<Object> get props => [data,hasReachedMax];
 }
 class FollowingPostFailure extends FollowingPostState {
   final String msg;

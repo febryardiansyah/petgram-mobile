@@ -59,12 +59,12 @@ class _HomeScreenState extends State<HomeScreen> {
             if (state is FollowingPostLoaded) {
 
               final data = state.data;
-              if(state.data.postModel.length == 0){
+              if(state.data.length == 0){
                 return Center(
                   child: Text('No Post Yet'),
                 );
               }
-              return PostItem(data: data,);
+              return PostItem(data: data,state: state,);
             }
             if(state is FollowingPostLoading){
               return FollowingPostShimmer();
@@ -77,9 +77,10 @@ class _HomeScreenState extends State<HomeScreen> {
 }
 
 class PostItem extends StatefulWidget {
-  final FollowingPostModel data;
+  final List<PostModel> data;
+  final FollowingPostLoaded state;
 
-  PostItem({this.data,});
+  PostItem({this.data,this.state});
 
   @override
   _PostItemState createState() => _PostItemState();
@@ -91,29 +92,63 @@ class _PostItemState extends State<PostItem> {
   int _selectedIndex = 0;
   List _loveList = [];
 
+  FollowingPostLoaded get state => widget.state;
+
   RefreshController _refreshController = RefreshController(initialRefresh: false);
 
   void _onRefresh() async{
-    BlocProvider.of<FollowingPostBloc>(context)..add(UpdateFollowingPost());
+    BlocProvider.of<FollowingPostBloc>(context).add(UpdateFollowingPost());
     _refreshController.refreshCompleted();
   }
+
+  void _onLoading() async{
+    BlocProvider.of<FollowingPostBloc>(context).add(FetchFollowingPost());
+    _refreshController.refreshCompleted();
+  }
+
   @override
   Widget build(BuildContext context) {
     ScreenUtil.init(context);
     final size = MediaQuery.of(context).size;
     return SmartRefresher(
       enablePullDown: true,
+      enablePullUp:state.hasReachedMax?false: true,
       header: ClassicHeader(),
       controller: _refreshController,
+      onLoading: _onLoading,
       onRefresh: _onRefresh,
+      footer: CustomFooter(
+        builder: (BuildContext context,LoadStatus mode){
+          Widget body ;
+          if(mode==LoadStatus.idle){
+            body =  Text("pull up load");
+          }
+          else if(mode==LoadStatus.loading){
+            body =  CupertinoActivityIndicator();
+          }
+          else if(mode == LoadStatus.failed){
+            body = Text("Load Failed!Click retry!");
+          }
+          else if(mode == LoadStatus.canLoading){
+            body = Text("release to load more");
+          }
+          else if(state.hasReachedMax){
+            body = Text("No more Data");
+          }
+          return Container(
+            height: 55.0,
+            child: Center(child:body),
+          );
+        },
+      ),
       child: ListView.separated(
         separatorBuilder: (context,i) => Divider(),
         shrinkWrap: true,
         physics: BouncingScrollPhysics(),
-        itemCount: widget.data.postModel.length,
+        itemCount: widget.data.length,
         itemBuilder: (context,i){
 
-          final _list = widget.data.postModel[i];
+          final _list = widget.data[i];
 
           _loveList.insertAll(i, [FlareActor('assets/flares/love_heart.flr',animation: _isShowLove?'Like heart':'null',fit: BoxFit.contain,)]);
 
@@ -128,7 +163,7 @@ class _PostItemState extends State<PostItem> {
             return true;
           }
 
-          if(widget.data.postModel.length == 0){
+          if(widget.data.length == 0){
             return Text('No Post yet');
           }
           return Container(

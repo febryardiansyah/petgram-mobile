@@ -9,7 +9,7 @@ import 'package:petgram_mobile_app/models/user_models/user_profile_model.dart';
 import 'package:petgram_mobile_app/services/base_service.dart';
 
 abstract class POST{
-  Future<FollowingPostModel> getFollowingPost();
+  Future<FollowingPostModel> getFollowingPost({int page});
   Future<UserProfileModel> getMyProfile();
   Future<UserProfileModel> getUserProfile(String id);
   Future<LikeUnlikeModel> likePost(String id);
@@ -26,8 +26,8 @@ abstract class POST{
 class PostRepo extends BaseService implements POST{
 
   @override
-  Future<FollowingPostModel> getFollowingPost()async {
-    Response response = await request(endpoint:'post/followingpost/0',requestType: RequestType.GET );
+  Future<FollowingPostModel> getFollowingPost({int page})async {
+    Response response = await request(endpoint:'post/followingpost/$page',requestType: RequestType.GET );
     if(response.data['message'] == 'no post'){
       return null;
     }

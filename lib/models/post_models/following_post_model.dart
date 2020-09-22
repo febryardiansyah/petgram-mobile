@@ -1,12 +1,14 @@
 class FollowingPostModel {
   String message;
+  bool status;
   List<PostModel> postModel;
 
-  FollowingPostModel({this.message, this.postModel});
+  FollowingPostModel({this.message, this.postModel,this.status});
 
   factory FollowingPostModel.fromMap(Map<String, dynamic> json) {
     return FollowingPostModel(
         message: json['message'],
+        status: json['status'],
         postModel: List<PostModel>.from(
             json['followingPostUser'].map((item) => PostModel.fromMap(item))));
   }
