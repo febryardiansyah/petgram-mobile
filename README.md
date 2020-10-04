@@ -38,7 +38,7 @@ If you wonder or you want to use the backend that used on this app. You can chec
 
 | Upload Post Failure | Upload Post Success  |
 |--|--|
-| <img src="assets/preview/up_failure.gif> | | <img src="assets/preview/up_success.gif> |
+| <img src="assets/preview/up_failure.gif"> | | <img src="assets/preview/up_success.gif"> |
 
 ## Screenshot
 |Browse  | Home | Detail Post |
