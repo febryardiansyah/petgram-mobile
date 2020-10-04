@@ -18,6 +18,8 @@ to detect User Post which is only Dogs and Cats are allowed for now.
 If you wonder or you want to use the backend that used on this app. You can check the link below for more information
 [here](https://github.com/febryardiansyah/petgram-server/)
 
+> Download Apk [Here](https://github.com/febryardiansyah/petgram-mobile/releases)
+
 ## Features
 - Login
 - Register
@@ -36,7 +38,7 @@ If you wonder or you want to use the backend that used on this app. You can chec
 
 | Upload Post Failure | Upload Post Success  |
 |--|--|
-| ![](https://media.discordapp.net/attachments/293767021030670356/762301701377097728/up_failure.gif?width=536&height=953) | ![](https://media.discordapp.net/attachments/293767021030670356/762301915869478973/up_success.gif?width=536&height=953) |
+| <img src="assets/preview/up_failure.gif> | | <img src="assets/preview/up_success.gif> |
 
 ## Screenshot
 |Browse  | Home | Detail Post |
@@ -56,9 +58,29 @@ If you wonder or you want to use the backend that used on this app. You can chec
 - [MongoDb](https://www.mongodb.com/) is a general purpose, document-based, distributed database built for modern application developers and for the cloud era.
 - [Glitch](https://glitch.com/) is Simple, powerful, free tools to create and use millions of apps.
 
+## Build Setup
+``` bash
+
+# install dependencies
+$ flutter pub get
+
+# run debug mode
+$ flutter run
+
+# run release mode
+$ flutter run --release
+
+# build app bundle
+$ flutter build appbundle
+
+# build apk
+$ flutter build apk
+
+```
+
 
 ## LICENSE
 <p align="center">
 <a src="https://github.com/febryardiansyah/petgram-mobile/blob/master/LICENSE">LICENSE</a><br>
-Build with ♥️from Indonesia 🇮🇩
+Build with ♥ from Indonesia 🇮🇩
 </p>
