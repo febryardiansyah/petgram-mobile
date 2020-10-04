@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:petgram_mobile_app/bloc/register_bloc/register_bloc.dart';
 import 'package:petgram_mobile_app/components/confirm_button.dart';
+import 'package:petgram_mobile_app/components/loading_dialog.dart';
 import 'package:petgram_mobile_app/components/my_form_field.dart';
 import 'package:petgram_mobile_app/constants/base_color.dart';
 import 'package:petgram_mobile_app/constants/base_string.dart';
@@ -32,21 +33,17 @@ class _RegisterScreenState extends State<RegisterScreen> {
     final size = MediaQuery.of(context).size;
     ScreenUtil.init(context);
     return Scaffold(
-      body: BlocConsumer<RegisterBloc,RegisterState>(
+      body: BlocListener<RegisterBloc,RegisterState>(
         listener: (context,state){
           if(state is RegisterLoading){
-            Scaffold.of(context)..hideCurrentSnackBar()
-              ..showSnackBar(SnackBar(
-                content: Text('Loading..'),
-              ));
+            LoadingDialog(context: context,msg: 'Registering..');
           }
           if(state is RegisterSuccess){
-            Scaffold.of(context)..hideCurrentSnackBar()
-              ..showSnackBar(SnackBar(
-                content: Text(state.msg),
-              ));
+            Navigator.pop(context);
+            Navigator.pushNamed(context, '/registerSuccess',arguments: state.msg);
           }
           if(state is RegisterFailure){
+            Navigator.pop(context);
             AwesomeDialog(
               context: context,
               dialogType: DialogType.ERROR,
@@ -57,11 +54,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
             )..show();
           }
         },
-        builder:(context,state) {
-          if(state is RegisterSuccess){
-            return RegisterSuccessScreen(msg: state.msg,);
-          }
-          return Stack(
+        child:Stack(
           children: [
             Container(
               width: size.width,
@@ -156,8 +149,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               ),
             )
           ],
-        );
-        },
+        ),
       ),
     );
   }

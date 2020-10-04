@@ -49,6 +49,10 @@ If you wonder or you want to use the backend that used on this app. You can chec
 |--|--|--|
 |![](https://media.discordapp.net/attachments/293767021030670356/762304217783336990/user-profile.png?width=536&height=953) | ![](https://media.discordapp.net/attachments/293767021030670356/762304139018371133/my-profile.png?width=536&height=953) |![](https://media.discordapp.net/attachments/293767021030670356/762304108178571264/edit-profile.png?width=536&height=953)
 
+| Login | Register | Search user|
+|--|--|--|
+| ![](https://media.discordapp.net/attachments/293767021030670356/762338366787944528/login.png?width=536&height=953) | ![](https://media.discordapp.net/attachments/293767021030670356/762338368968982578/register.png?width=536&height=953) |![](https://media.discordapp.net/attachments/293767021030670356/762304095104008212/search-user.png?width=536&height=953)
+
 
 ## Techonlogies Used
 - [Flutter](https://flutter.dev/) is An open-source UI software development kit created by Google. It is used to develop applications for Android, iOS, Linux, Mac, Windows, Google Fuchsia, and the web from a single codebase.

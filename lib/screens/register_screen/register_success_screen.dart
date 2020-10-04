@@ -18,50 +18,47 @@ class _RegisterSuccessScreenState extends State<RegisterSuccessScreen> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    return BlocBuilder<RegisterBloc,RegisterState>(
-      builder:(context,state) => Scaffold(
-        body: Stack(
-          children: [
-            Container(
-              width: size.width,
-              height: size.height,
-              decoration: BoxDecoration(
+    return Scaffold(
+      body: Stack(
+        children: [
+          Container(
+            width: size.width,
+            height: size.height,
+            decoration: BoxDecoration(
                 image: DecorationImage(
-                  image: AssetImage(BaseString.wp3),
-                  fit: BoxFit.cover
+                    image: AssetImage(BaseString.wp3),
+                    fit: BoxFit.cover
                 )
-              ),
             ),
-            Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(widget.msg,style: TextStyle(fontSize: 30),),
-                  Container(
-                    height: size.height * 0.6,
-                    width: size.width * 0.6,
-                    child: FlareActor('assets/flares/otp-verification.flr',fit: BoxFit.contain,animation: 'verify-otp',),
-                  ),
-                  GestureDetector(
-                    onTap: (){
-                      context.bloc<RegisterBloc>().add(RegisterBtnPressed());
-                      Navigator.pushReplacementNamed(context, '/loginScreen');
-                    },
-                    child: Container(
-                      padding: EdgeInsets.all(10),
-                      child: Text('Back to Login',style: TextStyle(color: BaseColor.white),),
-                      decoration: BoxDecoration(
+          ),
+          Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(widget.msg,style: TextStyle(fontSize: 30),),
+                Container(
+                  height: size.height * 0.6,
+                  width: size.width * 0.6,
+                  child: FlareActor('assets/flares/otp-verification.flr',fit: BoxFit.contain,animation: 'verify-otp',),
+                ),
+                GestureDetector(
+                  onTap: (){
+                    Navigator.pushReplacementNamed(context, '/loginScreen');
+                  },
+                  child: Container(
+                    padding: EdgeInsets.all(10),
+                    child: Text('Back to Login',style: TextStyle(color: BaseColor.white),),
+                    decoration: BoxDecoration(
                         color: Colors.transparent,
                         borderRadius: BorderRadius.all(Radius.circular(8)),
                         border: Border.all(width: 1,color: BaseColor.grey3)
-                      ),
                     ),
-                  )
-                ],
-              ),
+                  ),
+                )
+              ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

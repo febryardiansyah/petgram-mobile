@@ -8,6 +8,7 @@ import 'package:intl/intl.dart';
 import 'package:petgram_mobile_app/bloc/reset_password_bloc/reset_password_bloc.dart';
 import 'package:petgram_mobile_app/bloc/signin_bloc/sign_in_bloc.dart';
 import 'package:petgram_mobile_app/components/confirm_button.dart';
+import 'package:petgram_mobile_app/components/loading_dialog.dart';
 import 'package:petgram_mobile_app/components/my_form_field.dart';
 import 'package:petgram_mobile_app/constants/base_color.dart';
 import 'package:petgram_mobile_app/constants/base_string.dart';
@@ -47,24 +48,16 @@ class _LoginScreenState extends State<LoginScreen> {
       body: BlocConsumer<SignInBloc,SignInState>(
         listener: (context,state){
           if(state is SignInLoading){
-            Scaffold.of(context)
-              ..showSnackBar(SnackBar(content:  Row(
-                children: <Widget>[
-                  CircularProgressIndicator(),
-                  Container(
-                    margin: EdgeInsets.only(left: 15.0),
-                    child: Text('Loading..'),
-                  )
-                ],
-              ),));
+            LoadingDialog(context: context,msg: 'LoginIn...');
           }
           if(state is SignInSuccess){
+            Navigator.pop(context);
             Scaffold.of(context)..hideCurrentSnackBar()
                 ..showSnackBar(SnackBar(content: Text(state.msg,style: TextStyle(color: BaseColor.white),),backgroundColor: BaseColor.purple1,));
             Navigator.pushNamed(context, '/home');
           }
           if(state is SignInFailure){
-            Scaffold.of(context)..hideCurrentSnackBar();
+            Navigator.pop(context);
             AwesomeDialog(
               context: context,
               dialogType: DialogType.ERROR,
