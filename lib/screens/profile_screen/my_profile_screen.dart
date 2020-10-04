@@ -16,7 +16,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
   @override
   void initState() {
     super.initState();
-    BlocProvider.of<ProfileBloc>(context)..add(FetchMyProfile());
+    BlocProvider.of<MyProfileBloc>(context)..add(FetchMyProfile());
     BlocProvider.of<DeletePostBloc>(context);
     BlocProvider.of<EditPostBloc>(context);
   }
@@ -24,9 +24,9 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: BlocConsumer<ProfileBloc,ProfileState>(
+      body: BlocConsumer<MyProfileBloc,MyProfileState>(
         listener: (context,state){
-          if(state is ProfileFailure){
+          if(state is MyProfileFailure){
             Scaffold.of(context)..hideCurrentSnackBar()
                 ..showSnackBar(SnackBar(
                   content: Text(state.msg),
@@ -35,10 +35,10 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
         },
         builder: (context,state){
           print(state);
-          if(state is ProfileLoading){
+          if(state is MyProfileLoading){
             return ProfileScreenLoading();
           }
-          if(state is ProfileFailure){
+          if(state is MyProfileFailure){
             return Center(
               child: Text(state.msg),
             );

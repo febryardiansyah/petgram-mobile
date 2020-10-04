@@ -8,53 +8,53 @@ import 'package:petgram_mobile_app/repositories/post_repo.dart';
 part 'profile_event.dart';
 part 'profile_state.dart';
 
-class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
+class MyProfileBloc extends Bloc<MyProfileEvent, MyProfileState> {
   final POST _post;
-  ProfileBloc(POST post) :this._post = post, super(ProfileInitial());
+  MyProfileBloc(POST post) :this._post = post, super(MyProfileInitial());
 
   @override
-  Stream<ProfileState> mapEventToState(
-    ProfileEvent event,
+  Stream<MyProfileState> mapEventToState(
+    MyProfileEvent event,
   ) async* {
     final currentState = state;
 
-    if(currentState is ProfileFailure){
-      yield ProfileInitial();
+    if(currentState is MyProfileFailure){
+      yield MyProfileInitial();
     }
     if(event is FetchMyProfile){
-      yield ProfileLoading();
+      yield MyProfileLoading();
       try{
           final response = await _post.getMyProfile();
 
-          if(response.status == true){
+          if(response.status){
             yield MyProfileLoaded(userProfileModel: response);
           }else{
-            yield ProfileFailure(msg: response.message);
+            yield MyProfileFailure(msg: response.message);
           }
         }catch(e){
-          yield ProfileFailure(msg: e.toString());
+          yield MyProfileFailure(msg: e.toString());
         }
     }
 
     if(event is ResetProfileEvent){
-      yield ProfileInitial();
+      yield MyProfileInitial();
     }
 
-    if(event is FetchUserProfile){
-        try{
-          yield ProfileLoading();
-
-          final response = await _post.getUserProfile(event.id);
-
-          if(response.status == true){
-            yield UserProfileLoaded(userProfileModel: response);
-          }else{
-            yield ProfileFailure(msg: response.message);
-          }
-        }catch(e){
-          yield ProfileFailure(msg: e.toString());
-        }
-
-    }
+//    if(event is FetchUserProfile){
+//        try{
+//          yield ProfileLoading();
+//
+//          final response = await _post.getUserProfile(event.id);
+//
+//          if(response.status == true){
+//            yield UserProfileLoaded(userProfileModel: response);
+//          }else{
+//            yield ProfileFailure(msg: response.message);
+//          }
+//        }catch(e){
+//          yield ProfileFailure(msg: e.toString());
+//        }
+//
+//    }
   }
 }

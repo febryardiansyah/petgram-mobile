@@ -59,7 +59,7 @@ class _HomeScreenState extends State<HomeScreen> {
             if (state is FollowingPostLoaded) {
 
               final data = state.data;
-              if(state.data.length == 0){
+              if(state.data == null){
                 return Center(
                   child: Text('No Post Yet'),
                 );

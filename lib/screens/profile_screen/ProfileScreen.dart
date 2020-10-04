@@ -8,6 +8,7 @@ import 'package:petgram_mobile_app/bloc/follow_unfollow_bloc/follow_unfollow_blo
 import 'package:petgram_mobile_app/bloc/following_post_bloc/following_post_bloc.dart';
 import 'package:petgram_mobile_app/bloc/my_profile_bloc/profile_bloc.dart';
 import 'package:petgram_mobile_app/bloc/signin_bloc/sign_in_bloc.dart';
+import 'package:petgram_mobile_app/bloc/user_profile_bloc/user_profile_bloc.dart';
 import 'package:petgram_mobile_app/constants/base_color.dart';
 import 'package:petgram_mobile_app/models/post_models/following_post_model.dart';
 import 'package:petgram_mobile_app/models/user_models/user_profile_model.dart';
@@ -181,7 +182,7 @@ class MyHeaderDelegate extends SliverPersistentHeaderDelegate {
                             print('follow unfollow $state');
                             if(state is FollowUserSuccess || state is UnFollowUserSuccess){
                               Navigator.pop(context);
-                              BlocProvider.of<ProfileBloc>(context).add(FetchUserProfile(id: userDetail.id));
+                              BlocProvider.of<UserProfileBloc>(context).add(FetchUserProfile(id: userDetail.id));
                               BlocProvider.of<FollowingPostBloc>(context).add(UpdateFollowingPost());
                             }
                             if(state is FollowUnfollowLoading){

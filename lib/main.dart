@@ -15,6 +15,7 @@ import 'package:petgram_mobile_app/bloc/register_bloc/register_bloc.dart';
 import 'package:petgram_mobile_app/bloc/reset_password_bloc/reset_password_bloc.dart';
 import 'package:petgram_mobile_app/bloc/search_user_bloc/search_user_bloc.dart';
 import 'package:petgram_mobile_app/bloc/signin_bloc/sign_in_bloc.dart';
+import 'package:petgram_mobile_app/bloc/user_profile_bloc/user_profile_bloc.dart';
 import 'package:petgram_mobile_app/constants/base_string.dart';
 import 'package:petgram_mobile_app/helpers/routes.dart';
 import 'package:petgram_mobile_app/repositories/auth_repo.dart';
@@ -45,8 +46,8 @@ class MyApp extends StatelessWidget {
         BlocProvider<FollowingPostBloc>(
           create: (_) => FollowingPostBloc(PostRepo()),
         ),
-        BlocProvider<ProfileBloc>(
-          create: (_) => ProfileBloc(PostRepo()),
+        BlocProvider<MyProfileBloc>(
+          create: (_) => MyProfileBloc(PostRepo()),
         ),
         BlocProvider<LikeUnlikeBloc>(
           create: (_) => LikeUnlikeBloc(PostRepo()),
@@ -61,7 +62,7 @@ class MyApp extends StatelessWidget {
           create: (_) => PostCommentBloc(PostRepo()),
         ),
         BlocProvider<DeletePostBloc>(
-          create: (_) => DeletePostBloc(PostRepo(),ProfileBloc(PostRepo())),
+          create: (_) => DeletePostBloc(PostRepo(),MyProfileBloc(PostRepo())),
         ),
         BlocProvider<CreatePostBloc>(
           create: (_) => CreatePostBloc(PostRepo()),
@@ -80,6 +81,9 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider<ResetPasswordBloc>(
           create: (_) => ResetPasswordBloc(UserRepo()),
+        ),
+        BlocProvider<UserProfileBloc>(
+          create: (_) => UserProfileBloc(PostRepo()),
         ),
       ],
       child: MaterialApp(

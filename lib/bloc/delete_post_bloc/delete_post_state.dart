@@ -7,6 +7,7 @@ abstract class DeletePostState extends Equatable {
 }
 
 class DeletePostInitial extends DeletePostState {}
+class DeletePostLoading extends DeletePostState {}
 class DeletePostSuccess extends DeletePostState {}
 class DeletePostFailure extends DeletePostState {
   final String msg;

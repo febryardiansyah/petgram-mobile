@@ -7,6 +7,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:petgram_mobile_app/bloc/all_post_bloc/all_post_bloc.dart';
 import 'package:petgram_mobile_app/bloc/create_post_bloc/create_post_bloc.dart';
 import 'package:petgram_mobile_app/components/confirm_button.dart';
+import 'package:petgram_mobile_app/components/loading_dialog.dart';
 import 'package:petgram_mobile_app/components/my_form_field.dart';
 import 'package:petgram_mobile_app/constants/base_color.dart';
 
@@ -63,6 +64,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
         listener: (context,state){
           print(state);
           if(state is CreatePostSuccess){
+            Navigator.pop(context);
             BlocProvider.of<AllPostBloc>(context).add(UpdateAllPost());
             Scaffold.of(context)..hideCurrentSnackBar()..showSnackBar(SnackBar(
               content: Text('Create Post Success'),
@@ -71,22 +73,12 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
             _image = null;
           }
           if(state is CreatePostLoading){
-            Scaffold.of(context)..hideCurrentSnackBar()..showSnackBar(
-              SnackBar(content: Row(
-                children: <Widget>[
-                  CircularProgressIndicator(),
-                  Container(
-                    margin: EdgeInsets.only(left: 15.0),
-                    child: Text('Uploading..'),
-                  )
-                ],
-              ),)
-            );
+            LoadingDialog(context: context,msg:'Uploading');
           }
           if(state is CreatePostFailure){
-            print(state.msg ?? 'Failed Create Post');
+            Navigator.pop(context);
             Scaffold.of(context)..hideCurrentSnackBar()..showSnackBar(
-                SnackBar(content: Text(state.msg ?? 'Failed Create Post'),)
+                SnackBar(content: Text(state.msg),)
             );
             context.bloc<CreatePostBloc>().add(ResetCreatePostEvent());
           }

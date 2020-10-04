@@ -1,15 +1,14 @@
 part of 'profile_bloc.dart';
 
-abstract class ProfileState extends Equatable {
-  const ProfileState();
+abstract class MyProfileState extends Equatable {
+  const MyProfileState();
   @override
   List<Object> get props => [];
 }
 
-class ProfileInitial extends ProfileState {}
-class ProfileLoading extends ProfileState{}
-class MyProfileLoading extends ProfileState{}
-class MyProfileLoaded extends ProfileState{
+class MyProfileInitial extends MyProfileState {}
+class MyProfileLoading extends MyProfileState{}
+class MyProfileLoaded extends MyProfileState{
   final UserProfileModel userProfileModel;
 
   MyProfileLoaded({this.userProfileModel});
@@ -17,18 +16,10 @@ class MyProfileLoaded extends ProfileState{
   List<Object> get props => [userProfileModel];
 }
 
-class UserProfileLoaded extends ProfileState{
-  final UserProfileModel userProfileModel;
-
-  UserProfileLoaded({this.userProfileModel});
-  @override
-  List<Object> get props => [userProfileModel];
-}
-
-class ProfileFailure extends ProfileState{
+class MyProfileFailure extends MyProfileState{
   final msg;
 
-  ProfileFailure({this.msg});
+  MyProfileFailure({this.msg});
   @override
   List<Object> get props => [msg];
 }

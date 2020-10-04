@@ -23,7 +23,7 @@ class _EditPasswordFormScreenState extends State<EditPasswordFormScreen> {
     return BlocListener<EditProfileBloc,EditProfileState>(
       listener: (context,state){
         if(state is EditProfileSuccess){
-          context.bloc<ProfileBloc>().add(FetchMyProfile());
+          context.bloc<MyProfileBloc>().add(FetchMyProfile());
           Navigator.pop(context);
         }
       },

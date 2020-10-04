@@ -10,8 +10,8 @@ part 'delete_post_state.dart';
 
 class DeletePostBloc extends Bloc<DeletePostEvent, DeletePostState> {
   final POST _post;
-  final ProfileBloc _profileBloc;
-  DeletePostBloc(POST post,ProfileBloc profileBloc) :this._post = post,
+  final MyProfileBloc _profileBloc;
+  DeletePostBloc(POST post,MyProfileBloc profileBloc) :this._post = post,
         this._profileBloc = profileBloc,super(DeletePostInitial());
 
   @override
@@ -19,6 +19,7 @@ class DeletePostBloc extends Bloc<DeletePostEvent, DeletePostState> {
     DeletePostEvent event,
   ) async* {
     if(event is DeletePost){
+      yield DeletePostLoading();
       try{
         final bool status = await _post.deletePost(event.id);
         if(status){

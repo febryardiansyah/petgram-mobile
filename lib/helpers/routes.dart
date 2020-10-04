@@ -10,6 +10,7 @@ import 'package:petgram_mobile_app/screens/login_screen/login_screen.dart';
 import 'package:petgram_mobile_app/screens/profile_screen/my_profile_screen.dart';
 import 'package:petgram_mobile_app/screens/profile_screen/user_profile_screen.dart';
 import 'package:petgram_mobile_app/screens/register_screen/register_screen.dart';
+import 'package:petgram_mobile_app/screens/settings_screen/settings_screen.dart';
 import 'package:petgram_mobile_app/screens/splash_screen.dart';
 
 MaterialPageRoute _pageRoute({Widget builder,RouteSettings settings,bool isFullScreen = false})=>
@@ -42,5 +43,7 @@ Route generateRoute(RouteSettings settings){
       return _pageRoute(builder: EditProfileScreen(userDetail: args,),settings: settings,);
     case '/search':
       return _pageRoute(builder: SearchUserScreen(),settings: settings,);
+    case '/settings':
+      return _pageRoute(builder: SettingsScreen(),settings: settings,);
   }
 }

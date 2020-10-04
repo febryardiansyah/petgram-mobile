@@ -7,6 +7,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:petgram_mobile_app/bloc/edit_profile_bloc/edit_profile_bloc.dart';
 import 'package:petgram_mobile_app/bloc/my_profile_bloc/profile_bloc.dart';
 import 'package:petgram_mobile_app/components/confirm_button.dart';
+import 'package:petgram_mobile_app/components/loading_dialog.dart';
 import 'package:petgram_mobile_app/components/my_form_field.dart';
 import 'package:petgram_mobile_app/constants/base_color.dart';
 import 'package:petgram_mobile_app/models/user_models/user_profile_model.dart';
@@ -53,7 +54,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   void initState() {
     super.initState();
     BlocProvider.of<EditProfileBloc>(context);
-    BlocProvider.of<ProfileBloc>(context).add(FetchMyProfile());
+    BlocProvider.of<MyProfileBloc>(context).add(FetchMyProfile());
   }
 
   @override
@@ -80,22 +81,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       body: BlocListener<EditProfileBloc, EditProfileState>(
         listener: (context, state) {
           if (state is EditProfileLoading) {
-            showDialog(
-                context: context,
-                builder: (context) => AlertDialog(
-                      content: Row(
-                        children: [
-                          CircularProgressIndicator(),
-                          Padding(
-                            padding: EdgeInsets.only(left: 10),
-                            child: Text('Loading...'),
-                          )
-                        ],
-                      ),
-                    ));
+            LoadingDialog(msg: 'Loading..',context: context);
           }
           if (state is EditProfileSuccess) {
-            context.bloc<ProfileBloc>().add(FetchMyProfile());
+            context.bloc<MyProfileBloc>().add(FetchMyProfile());
             Scaffold.of(context)
               ..hideCurrentSnackBar()
               ..showSnackBar(SnackBar(
@@ -186,9 +175,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 ),
               ),
             ),
-            BlocBuilder<ProfileBloc, ProfileState>(
+            BlocBuilder<MyProfileBloc, MyProfileState>(
               builder: (context, state) {
-                if (state is ProfileLoading) {
+                if (state is MyProfileLoading) {
                   return Center(
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
@@ -264,7 +253,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     ],
                   );
                 }
-                if (state is ProfileFailure) {
+                if (state is MyProfileFailure) {
                   return Center(
                     child: Text(state.msg),
                   );

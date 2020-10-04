@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:petgram_mobile_app/bloc/follow_unfollow_bloc/follow_unfollow_bloc.dart';
 import 'package:petgram_mobile_app/bloc/my_profile_bloc/profile_bloc.dart';
+import 'package:petgram_mobile_app/bloc/user_profile_bloc/user_profile_bloc.dart';
 import 'package:petgram_mobile_app/screens/profile_screen/profile_loading.dart';
 
 import 'ProfileScreen.dart';
@@ -22,16 +23,16 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
   void initState() {
     super.initState();
     BlocProvider.of<FollowUnfollowUserBloc>(context);
-    BlocProvider.of<ProfileBloc>(context).add(FetchUserProfile(
+    BlocProvider.of<UserProfileBloc>(context).add(FetchUserProfile(
       id: widget.id
     ));
   }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: BlocConsumer<ProfileBloc,ProfileState>(
+      body: BlocConsumer<UserProfileBloc,UserProfileState>(
         listener: (context,state){
-          if(state is ProfileFailure){
+          if(state is UserProfileFailure){
             Scaffold.of(context)..hideCurrentSnackBar()
               ..showSnackBar(SnackBar(
                 content: Text(state.msg),
@@ -40,10 +41,10 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
         },
         builder: (context,state){
           print(state);
-          if(state is ProfileLoading){
+          if(state is UserProfileLoading){
             return ProfileScreenLoading();
           }
-          if(state is ProfileFailure){
+          if(state is UserProfileFailure){
             return Center(
               child: Text(state.msg),
             );

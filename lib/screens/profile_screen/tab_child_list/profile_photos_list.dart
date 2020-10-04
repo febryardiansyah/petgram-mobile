@@ -5,6 +5,7 @@ import 'package:petgram_mobile_app/bloc/delete_post_bloc/delete_post_bloc.dart';
 import 'package:petgram_mobile_app/bloc/edit_post_bloc/edit_post_bloc.dart';
 import 'package:petgram_mobile_app/bloc/following_post_bloc/following_post_bloc.dart';
 import 'package:petgram_mobile_app/bloc/my_profile_bloc/profile_bloc.dart';
+import 'package:petgram_mobile_app/components/loading_dialog.dart';
 import 'package:petgram_mobile_app/components/my_form_field.dart';
 import 'package:petgram_mobile_app/constants/base_color.dart';
 import 'package:petgram_mobile_app/models/post_models/following_post_model.dart';
@@ -60,14 +61,19 @@ class ProfilePhotosList extends StatelessWidget {
                             listener: (context,state){
                               if(state is DeletePostSuccess){
                                 print('success');
-                                BlocProvider.of<ProfileBloc>(context).add(FetchMyProfile());
+                                BlocProvider.of<MyProfileBloc>(context).add(FetchMyProfile());
                                 BlocProvider.of<AllPostBloc>(context).add(FetchAllPostEvent());
                                 scaffoldKey.currentState.showSnackBar(SnackBar(
                                   content: Text('Delete Success'),
                                 ));
                               }
+                              if(state is DeletePostLoading){
+                                LoadingDialog(context: context,msg: 'Deleting...');
+                              }
                               if(state is DeletePostFailure){
-
+                                Navigator.pop(context);
+                                Scaffold.of(context)..hideCurrentSnackBar()
+                                    ..showSnackBar(SnackBar(content: Text(state.msg),));
                               }
                             },
                             child: Container(
@@ -81,12 +87,6 @@ class ProfilePhotosList extends StatelessWidget {
                                    BlocProvider.of<DeletePostBloc>(context)..add(DeletePost(
                                        id: postList[i].id
                                    ));
-                                     Future.delayed(Duration(seconds: 1),(){
-//                                     BlocProvider.of<ProfileBloc>(context).add(FetchMyProfile());
-//                                     BlocProvider.of<FollowingPostBloc>(context).add(UpdateFollowingPost());
-//                                     BlocProvider.of<AllPostBloc>(context).add(FetchAllPostEvent());
-                                       Navigator.pop(context);
-                                     });
                                  },
                                ),
                                ListTile(

@@ -7,6 +7,7 @@ import 'package:petgram_mobile_app/constants/base_color.dart';
 import 'package:petgram_mobile_app/helpers/shared_preferences/profile_pref.dart';
 import 'package:petgram_mobile_app/screens/browse_screen/browse_screen.dart';
 import 'package:petgram_mobile_app/screens/login_screen/login_screen.dart';
+import 'package:petgram_mobile_app/screens/notification_screen/notification_screen.dart';
 
 import 'home_screen.dart';
 
@@ -21,7 +22,7 @@ class _MyNavigationRailState extends State<MyNavigationRail> {
   List<Widget> _childern = [
     HomeScreen(),
     BrowseScreen(),
-    BrowseScreen(),
+    NotificationScreen()
   ];
 
   _setPic() async {
@@ -34,7 +35,7 @@ class _MyNavigationRailState extends State<MyNavigationRail> {
   @override
   void initState() {
     super.initState();
-    BlocProvider.of<ProfileBloc>(context).add(FetchMyProfile());
+    BlocProvider.of<MyProfileBloc>(context).add(FetchMyProfile());
     _setPic();
   }
 
@@ -48,9 +49,11 @@ class _MyNavigationRailState extends State<MyNavigationRail> {
             NavigationRail(
               trailing: Padding(
                 padding:
-                    EdgeInsets.only(top: MediaQuery.of(context).size.width / 2),
+                    EdgeInsets.only(top: MediaQuery.of(context).size.width * 0.1),
                 child: GestureDetector(
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.pushNamed(context, '/settings');
+                  },
                   child: Icon(
                     Icons.settings,
                     color: BaseColor.white,
@@ -61,7 +64,7 @@ class _MyNavigationRailState extends State<MyNavigationRail> {
                   onTap: () {
                     Navigator.pushNamed(context, '/myProfile');
                   },
-                  child: BlocBuilder<ProfileBloc,ProfileState>(
+                  child: BlocBuilder<MyProfileBloc,MyProfileState>(
                     builder:(context,state) {
                       if(state is MyProfileLoaded){
                         return Align(
@@ -119,7 +122,6 @@ class _MyNavigationRailState extends State<MyNavigationRail> {
                 ),
               ],
             ),
-            VerticalDivider(thickness: 1, width: 1),
             // This is the main content.
             Expanded(
               child: Center(

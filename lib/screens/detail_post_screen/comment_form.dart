@@ -38,7 +38,7 @@ class CommentForm extends StatelessWidget {
         padding: const EdgeInsets.all(8.0),
         child: Row(
           children: [
-            BlocBuilder<ProfileBloc,ProfileState>(
+            BlocBuilder<MyProfileBloc,MyProfileState>(
               builder:(context,state) {
                 if(state is MyProfileLoaded){
                   return Container(

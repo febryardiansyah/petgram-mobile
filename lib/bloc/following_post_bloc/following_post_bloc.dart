@@ -35,7 +35,9 @@ class FollowingPostBloc extends Bloc<FollowingPostEvent, FollowingPostState> {
           if(response == null){
             yield FollowingPostLoaded(data: null);
           }else if(response.status){
-            yield FollowingPostLoaded(data: response.postModel,hasReachedMax: false,page: page+1);
+            yield response.postModel.length == 0 ? FollowingPostLoaded(
+              data: null,hasReachedMax: true,page: 0
+            ):FollowingPostLoaded(data: response.postModel,hasReachedMax: false,page: page+1);
           }else{
             yield FollowingPostFailure(msg: response.message);
           }
