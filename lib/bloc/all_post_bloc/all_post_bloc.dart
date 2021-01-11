@@ -38,6 +38,7 @@ class AllPostBloc extends Bloc<AllPostEvent, AllPostState> {
             yield AllPostFailure(msg: response.message);
           }
         }catch(e){
+          print(e.toString());
           yield AllPostFailure(msg: e.toString());
         }
       }

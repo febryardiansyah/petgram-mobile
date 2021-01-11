@@ -29,10 +29,11 @@ class BaseService {
       }
     }on DioError catch(e){
       print(e);
-      if(e.error == DioErrorType.DEFAULT){
-        _response = Response(data: 'Check your internet connection');
-      }
-      _response = e.response;
+        _response = Response(data: e.response.data);
+      // if(e.error == DioErrorType.DEFAULT){
+      //   _response = Response(data: 'Check your internet connection');
+      // }
+      // _response = e.response;
     }
 
     return _response;

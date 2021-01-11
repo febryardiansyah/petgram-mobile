@@ -33,7 +33,7 @@ class PostModel {
 
   factory PostModel.fromMap(Map<String, dynamic> json) {
     return PostModel(
-        id: json['_id'],
+        id: json['_id'] ?? '',
         caption: json['caption'],
         imageUrl: json['imageUrl'],
         postedBy: PostedByModel.fromMap(json['postedBy']),
@@ -54,7 +54,7 @@ class CommentModel {
 
   factory CommentModel.fromMap(Map<String, dynamic> json) {
     return CommentModel(
-      id: json['_id'],
+      id: json['_id'] ?? '',
       text: json['text'],
       isCommentByMe: json['isCommentbyMe'],
       postedBy: PostedByModel.fromMap(json['postedBy']),
@@ -69,6 +69,6 @@ class PostedByModel {
 
   factory PostedByModel.fromMap(Map<String, dynamic> json) {
     return PostedByModel(
-        id: json['_id'], name: json['name'], profilePic: json['profilePic']);
+        id: json['_id'] ?? '', name: json['name'], profilePic: json['profilePic']);
   }
 }
