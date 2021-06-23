@@ -41,9 +41,9 @@ class BaseService {
   Dio dio() {
     Dio dio = new Dio();
     dio.interceptors.add(InterceptorsWrapper(
-      onRequest: (RequestOptions options)async{
-//        options.baseUrl = 'https://petgram-server.herokuapp.com/';
-        options.baseUrl = 'http://58ab31e0b3ef.ngrok.io/';
+      onRequest: (RequestOptions options,a)async{
+       options.baseUrl = 'https://petgram-server.herokuapp.com/';
+//         options.baseUrl = 'http://58ab31e0b3ef.ngrok.io/';
         final token = await TokenPref.getToken();
         if(token != null){
           print('token <====================> $token');

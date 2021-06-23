@@ -19,13 +19,13 @@ class PetNameFormScreen extends StatelessWidget {
     return BlocListener<EditProfileBloc,EditProfileState>(
       listener: (context,state){
         if(state is EditProfileSuccess){
-          context.bloc<MyProfileBloc>().add(FetchMyProfile());
+          context.read<MyProfileBloc>().add(FetchMyProfile());
           Navigator.pop(context);
         }
       },
       child: EditProfileFormScreen(
         onDone: (){
-          context.bloc<EditProfileBloc>().add(EditPetNameProfileEvent(petname: _petCtrl.text));
+          context.read<EditProfileBloc>().add(EditPetNameProfileEvent(petname: _petCtrl.text));
         },
         child: Padding(
           padding: const EdgeInsets.all(8.0),

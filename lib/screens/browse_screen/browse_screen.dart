@@ -83,7 +83,11 @@ class _BrowsePostListState extends State<BrowsePostList> {
   }
   @override
   Widget build(BuildContext context) {
-    ScreenUtil.init(context);
+    ScreenUtil.init(BoxConstraints(
+        maxWidth: MediaQuery.of(context).size.width,
+        maxHeight: MediaQuery.of(context).size.height),
+        designSize: Size(720, 1280),
+        orientation: Orientation.portrait);
     return Column(
       children: [
         GestureDetector(

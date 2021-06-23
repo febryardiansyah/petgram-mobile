@@ -203,12 +203,12 @@ class MyHeaderDelegate extends SliverPersistentHeaderDelegate {
                                     !userDetail.isMe?userDetail.isFollowed?FlatButton(
                                       child: Text('Unfollow'),
                                       onPressed: (){
-                                        context.bloc<FollowUnfollowUserBloc>().add(UnFollowUser(id: userDetail.id));
+                                        context.read<FollowUnfollowUserBloc>().add(UnFollowUser(id: userDetail.id));
                                       },
                                     ):FlatButton(
                                       child: Text('Follow'),
                                       onPressed: (){
-                                        context.bloc<FollowUnfollowUserBloc>().add(FollowUser(id: userDetail.id));
+                                        context.read<FollowUnfollowUserBloc>().add(FollowUser(id: userDetail.id));
                                       },
                                     ):FlatButton(
                                       child: Text('Edit Profile'),

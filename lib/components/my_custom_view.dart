@@ -38,7 +38,11 @@ class _MyCustomViewState extends State<MyCustomView> {
   }
   @override
   Widget build(BuildContext context) {
-    ScreenUtil.init(context);
+    ScreenUtil.init(BoxConstraints(
+        maxWidth: MediaQuery.of(context).size.width,
+        maxHeight: MediaQuery.of(context).size.height),
+        designSize: Size(720, 1280),
+        orientation: Orientation.portrait);
     return NestedScrollView(
       controller: _controller,
       physics: BouncingScrollPhysics(),
@@ -51,7 +55,7 @@ class _MyCustomViewState extends State<MyCustomView> {
           leading: _scroll?Icon(FontAwesomeIcons.cat,color: BaseColor.purple2,):null,
           title: Text(_scroll?widget.title:'',style: TextStyle(color: BaseColor.black,fontWeight: FontWeight.bold),),
           actions: [
-            _scroll && widget.showCreatePost?IconButton(
+             widget.showCreatePost?IconButton(
               icon: Icon(Icons.add,color: BaseColor.purple2,),
               onPressed: (){
                 Navigator.pushNamed(context, '/createPost');

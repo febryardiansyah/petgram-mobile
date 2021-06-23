@@ -41,7 +41,11 @@ class _MyNavigationRailState extends State<MyNavigationRail> {
 
   @override
   Widget build(BuildContext context) {
-    ScreenUtil.init(context);
+    ScreenUtil.init(BoxConstraints(
+        maxWidth: MediaQuery.of(context).size.width,
+        maxHeight: MediaQuery.of(context).size.height),
+        designSize: Size(720, 1280),
+        orientation: Orientation.portrait);
     return Scaffold(
       body: SafeArea(
         child: Row(

@@ -40,7 +40,7 @@ class _SearchUserScreenState extends State<SearchUserScreen> {
           keyboardType: TextInputType.text,
           textEditingController: _searchCtrl,
           onFieldSubmitted: (value){
-            context.bloc<SearchUserBloc>().add(FetchSearchUser(query: _searchCtrl.text));
+            context.read<SearchUserBloc>().add(FetchSearchUser(query: _searchCtrl.text));
           },
         ),
         leading: IconButton(

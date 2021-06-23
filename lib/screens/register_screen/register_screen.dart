@@ -31,7 +31,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    ScreenUtil.init(context);
+    ScreenUtil.init(BoxConstraints(
+        maxWidth: MediaQuery.of(context).size.width,
+        maxHeight: MediaQuery.of(context).size.height),
+        designSize: Size(720, 1280),
+        orientation: Orientation.portrait);
     return Scaffold(
       body: BlocListener<RegisterBloc,RegisterState>(
         listener: (context,state){

@@ -108,7 +108,11 @@ class _PostItemState extends State<PostItem> {
 
   @override
   Widget build(BuildContext context) {
-    ScreenUtil.init(context);
+    ScreenUtil.init(BoxConstraints(
+        maxWidth: MediaQuery.of(context).size.width,
+        maxHeight: MediaQuery.of(context).size.height),
+        designSize: Size(720, 1280),
+        orientation: Orientation.portrait);
     final size = MediaQuery.of(context).size;
     return SmartRefresher(
       enablePullDown: true,
@@ -154,11 +158,11 @@ class _PostItemState extends State<PostItem> {
 
           Future<bool> onLikeButtonTapped(bool isLiked) async{
             if(!_list.isLiked){
-              context.bloc<LikeUnlikeBloc>().add(LikeEvent(id: _list.id));
-              context.bloc<FollowingPostBloc>().add(UpdateFollowingPost());
+              context.read<LikeUnlikeBloc>().add(LikeEvent(id: _list.id));
+              context.read<FollowingPostBloc>().add(UpdateFollowingPost());
             }else{
-              context.bloc<LikeUnlikeBloc>().add(UnlikeEvent(id: _list.id));
-              context.bloc<FollowingPostBloc>().add(UpdateFollowingPost());
+              context.read<LikeUnlikeBloc>().add(UnlikeEvent(id: _list.id));
+              context.read<FollowingPostBloc>().add(UpdateFollowingPost());
             }
             return true;
           }
@@ -202,7 +206,7 @@ class _PostItemState extends State<PostItem> {
                 GestureDetector(
                   onDoubleTap: (){
 
-                    context.bloc<LikeUnlikeBloc>().add(LikeEvent(id: _list.id));
+                    context.read<LikeUnlikeBloc>().add(LikeEvent(id: _list.id));
 
 
                   print('${_loveList[i]} $i');
@@ -215,7 +219,7 @@ class _PostItemState extends State<PostItem> {
                   });
                     Future.delayed(Duration(seconds: 3),(){
                       setState(() {
-                        context.bloc<FollowingPostBloc>().add(UpdateFollowingPost());
+                        context.read<FollowingPostBloc>().add(UpdateFollowingPost());
                         _isShowLove = false;
                       });
                     });

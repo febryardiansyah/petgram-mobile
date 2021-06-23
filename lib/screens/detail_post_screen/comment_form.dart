@@ -20,7 +20,11 @@ class CommentForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    ScreenUtil.init(context);
+    ScreenUtil.init(BoxConstraints(
+        maxWidth: MediaQuery.of(context).size.width,
+        maxHeight: MediaQuery.of(context).size.height),
+        designSize: Size(720, 1280),
+        orientation: Orientation.portrait);
 //    final size = MediaQuery.of(context).size;
 
     return BlocConsumer<PostCommentBloc,PostCommentState>(
@@ -83,7 +87,7 @@ class CommentForm extends StatelessWidget {
             SizedBox(width: 10,),
             GestureDetector(
               onTap: (){
-                context.bloc<PostCommentBloc>().add(CommentEvent(
+                context.read<PostCommentBloc>().add(CommentEvent(
                   id: id,text: _textCtrl.text,
                 ));
                 FocusScope.of(context).requestFocus(FocusNode());

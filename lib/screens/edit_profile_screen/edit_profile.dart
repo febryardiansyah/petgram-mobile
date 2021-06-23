@@ -84,7 +84,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             LoadingDialog(msg: 'Loading..',context: context);
           }
           if (state is EditProfileSuccess) {
-            context.bloc<MyProfileBloc>().add(FetchMyProfile());
+            context.read<MyProfileBloc>().add(FetchMyProfile());
             Scaffold.of(context)
               ..hideCurrentSnackBar()
               ..showSnackBar(SnackBar(
@@ -245,7 +245,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                 fontSize: 25),
                           )),
                           onTap: () {
-                            context.bloc<EditProfileBloc>().add(EditProfilePicEvent(
+                            context.read<EditProfileBloc>().add(EditProfilePicEvent(
                                 image: _image,));
                           },
                         ),

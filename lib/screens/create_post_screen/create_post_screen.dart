@@ -80,7 +80,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
             Scaffold.of(context)..hideCurrentSnackBar()..showSnackBar(
                 SnackBar(content: Text(state.msg),)
             );
-            context.bloc<CreatePostBloc>().add(ResetCreatePostEvent());
+            context.read<CreatePostBloc>().add(ResetCreatePostEvent());
           }
         },
         child: BlocBuilder<CreatePostBloc,CreatePostState>(
@@ -164,7 +164,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                       child: Text('Done',style: TextStyle(color: BaseColor.white,fontWeight: FontWeight.bold,fontSize: 24),),
                     ),
                     onTap: (){
-                      context.bloc<CreatePostBloc>().add(CreatePost(
+                      context.read<CreatePostBloc>().add(CreatePost(
                         image: _image,caption: _caption.text
                       ));
                     },

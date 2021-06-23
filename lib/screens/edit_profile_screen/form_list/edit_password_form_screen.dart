@@ -23,13 +23,13 @@ class _EditPasswordFormScreenState extends State<EditPasswordFormScreen> {
     return BlocListener<EditProfileBloc,EditProfileState>(
       listener: (context,state){
         if(state is EditProfileSuccess){
-          context.bloc<MyProfileBloc>().add(FetchMyProfile());
+          context.read<MyProfileBloc>().add(FetchMyProfile());
           Navigator.pop(context);
         }
       },
       child: EditProfileFormScreen(
         onDone: (){
-          context.bloc<EditProfileBloc>().add(EditPasswordEvent(password: _passCtrl.text));
+          context.read<EditProfileBloc>().add(EditPasswordEvent(password: _passCtrl.text));
         },
         child: Padding(
           padding: const EdgeInsets.all(8.0),

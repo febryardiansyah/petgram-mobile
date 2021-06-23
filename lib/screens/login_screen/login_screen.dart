@@ -38,7 +38,11 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
 
-    ScreenUtil.init(context);
+    ScreenUtil.init(BoxConstraints(
+        maxWidth: MediaQuery.of(context).size.width,
+        maxHeight: MediaQuery.of(context).size.height),
+        designSize: Size(720, 2000),
+        orientation: Orientation.portrait);
     final size = MediaQuery.of(context).size;
     DateTime now = DateTime.now();
     final timeNow = DateFormat('hh:mm').format(now);
@@ -47,6 +51,7 @@ class _LoginScreenState extends State<LoginScreen> {
     return Scaffold(
       body: BlocConsumer<SignInBloc,SignInState>(
         listener: (context,state){
+          print('login state $state');
           if(state is SignInLoading){
             LoadingDialog(context: context,msg: 'LoginIn...');
           }
@@ -214,7 +219,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   FlatButton(
                                     child: _isLoading ? CircularProgressIndicator():Text('Send'),
                                     onPressed: () {
-                                      context.bloc<ResetPasswordBloc>().add(DoResetPassword(
+                                      context.read<ResetPasswordBloc>().add(DoResetPassword(
                                         email: _resetPasswordEmail.text
                                       ));
                                     },
@@ -232,7 +237,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     ConfirmButton(
                       onTap: () {
-                        context.bloc<SignInBloc>().add(SignInBtnPressed(
+                        context.read<SignInBloc>().add(SignInBtnPressed(
                           email: _email.text,
                           passwod: _password.text,
                         ));

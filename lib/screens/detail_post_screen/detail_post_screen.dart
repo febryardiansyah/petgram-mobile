@@ -49,7 +49,11 @@ class _DetailPostScreenState extends State<DetailPostScreen> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    ScreenUtil.init(context);
+    ScreenUtil.init(BoxConstraints(
+        maxWidth: MediaQuery.of(context).size.width,
+        maxHeight: MediaQuery.of(context).size.height),
+        designSize: Size(720, 1280),
+        orientation: Orientation.portrait);
     return Scaffold(
       key: _key,
       body: BlocConsumer<DetailPostBloc,DetailPostState>(
@@ -170,10 +174,10 @@ class _DetailPostScreenState extends State<DetailPostScreen> {
                             setState(() {
                               _isShowLove = true;
                             });
-                            context.bloc<LikeUnlikeBloc>().add(LikeEvent(id: _data.id));
+                            context.read<LikeUnlikeBloc>().add(LikeEvent(id: _data.id));
                             Future.delayed(Duration(milliseconds: 500),(){
-                              context.bloc<DetailPostBloc>().add(UpdateDetailPost(id: widget.postModel.id));
-                              context.bloc<FollowingPostBloc>().add(UpdateFollowingPost());
+                              context.read<DetailPostBloc>().add(UpdateDetailPost(id: widget.postModel.id));
+                              context.read<FollowingPostBloc>().add(UpdateFollowingPost());
                             });
 
                             Future.delayed(Duration(seconds: 3),(){
@@ -219,10 +223,10 @@ class _DetailPostScreenState extends State<DetailPostScreen> {
                                       },
                                       onTap: (bool isLiked)async{
                                         if(!_data.isLiked){
-                                          context.bloc<LikeUnlikeBloc>().add(LikeEvent(id: _data.id));
+                                          context.read<LikeUnlikeBloc>().add(LikeEvent(id: _data.id));
 
                                         }else{
-                                          context.bloc<LikeUnlikeBloc>().add(UnlikeEvent(id: _data.id));
+                                          context.read<LikeUnlikeBloc>().add(UnlikeEvent(id: _data.id));
 
                                         }
                                         return true;
@@ -297,8 +301,8 @@ class _DetailPostScreenState extends State<DetailPostScreen> {
                                 listener: (context,state){
                                   print('delete comment $state');
                                   if(state is DeleteCommentSuccess){
-                                    context.bloc<DetailPostBloc>().add(UpdateDetailPost(id: _data.id));
-                                    context.bloc<FollowingPostBloc>().add(UpdateFollowingPost());
+                                    context.read<DetailPostBloc>().add(UpdateDetailPost(id: _data.id));
+                                    context.read<FollowingPostBloc>().add(UpdateFollowingPost());
                                   }
                                   if(state is DeleteCommentLoading){
                                     Scaffold.of(context)..hideCurrentSnackBar()..showSnackBar(SnackBar(
@@ -314,7 +318,7 @@ class _DetailPostScreenState extends State<DetailPostScreen> {
                                        color: Colors.red,
                                        icon: Icons.delete,
                                        onTap: (){
-                                         context.bloc<PostCommentBloc>().add(DeleteCommentEvent(
+                                         context.read<PostCommentBloc>().add(DeleteCommentEvent(
                                            id: _data.id,commentId: _data.comments[i].id
                                          ));
                                        },
